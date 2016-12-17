@@ -53,7 +53,8 @@ const students = [
 $(document).ready(function() {
   const unplacedStudents = new StudentCollection(students);
   const unplacedStudentsView = new UnplacedStudentsView({
-    model: unplacedStudents
+    model: unplacedStudents,
+    el: '#unplaced-students'
   });
   unplacedStudentsView.render();
 });
