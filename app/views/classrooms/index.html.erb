@@ -1,1 +1,28 @@
-<div id="application"></div>
+<div id="application">
+  <main>
+    <ul id="companies" class="large-9 columns">
+      <li>Samsung</li>
+      <li>City of Seattle Open Data</li>
+      <li>Pivotal Labs</li>
+    </ul>
+    <ul id="unplaced-students" class="large-3 columns">
+      <li>Ada Lovelace</li>
+      <li>Grace Hooper</li>
+      <li>Katherine Johnson</li>
+    </ul>
+  </main>
+</div>
+
+<script type="text/template" id="company-template">
+  <h3>
+    <%%- company.name %>
+  </h3>
+  <ul class="company-students">
+  </ul>
+</script>
+
+<script type="text/template" id="student-template">
+  <h3>
+    <%%- student.name %>
+  </h3>
+</script>
