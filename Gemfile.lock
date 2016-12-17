@@ -185,7 +185,6 @@ PLATFORMS
 DEPENDENCIES
   better_errors
   byebug
-  coffee-rails (~> 4.2)
   dotenv-rails
   jbuilder (~> 2.5)
   jquery-rails
