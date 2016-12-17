@@ -30,11 +30,9 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-#
 # JavaScript Libraries
-#
-
 gem 'jquery-rails'
+gem 'underscore-rails'
 gem 'rails-backbone'
 
 group :development, :test do
