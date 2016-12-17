@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require foundation
 //= require turbolinks
 //= require underscore
 //= require backbone
@@ -19,3 +20,5 @@
 //= require backbone_datalink
 //= require backbone/internship_placer
 //= require_tree .
+
+$(function(){ $(document).foundation(); });
