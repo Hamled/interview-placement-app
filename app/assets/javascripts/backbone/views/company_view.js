@@ -70,6 +70,9 @@ const CompanyView = Backbone.View.extend({
   onClick: function(event) {
     let student = this.bus.get('student');
     if (student) {
+      if (!this.model.canAdd(student)) {
+        return;
+      }
       console.log("Moving student " + student.get('name') + " into company " + this.model.get('name'));
       // The move has to come before the add - that way the
       // student has a chance to update its score before

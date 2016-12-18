@@ -39,7 +39,7 @@ const Company = Backbone.Model.extend({
       console.log("DPR FLAG");
       return;
     }
-    
+
     // Remove the student from the list without
     // having to destroy it
     this.students.remove(student);
@@ -53,5 +53,25 @@ const Company = Backbone.Model.extend({
       score += student.get('score');
     }, this);
     return score;
+  },
+
+  isFull: function() {
+    return this.students.length >= this.get('slots');
+  },
+
+  canAdd: function(student) {
+    // Are there any slots left in this company?
+    if (this.isFull()) {
+      return false;
+    }
+
+    // Did the student interview with this company?
+    if (this.get('interview_results')) {
+      return student.get('name') in this.get('interview_results');
+    } else {
+      // UnplacedStudents should be the only company without any
+      // interview results, and everyone can go there
+      return true;
+    }
   }
 })

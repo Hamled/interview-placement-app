@@ -29,7 +29,7 @@ const students = [
       "Pivotal Labs": {
         interview_result: 2,
         student_ranking: 5
-      }
+      },
     }
   }, {
     name: "Katherine Johnson",
@@ -47,6 +47,18 @@ const students = [
         student_ranking: 1
       }
     }
+  }, {
+    name: "Anita Borg",
+    companies: {
+      "Samsung": {
+        interview_result: 4,
+        student_ranking: 4
+      },
+      "Pivotal Labs": {
+        interview_result: 5,
+        student_ranking: 5
+      }
+    }
   }
 ];
 
@@ -57,7 +69,8 @@ const companies = [
     interview_results: {
       "Ada Lovelace": 4,
       "Grace Hooper": 2,
-      "Katherine Johnson": 5
+      "Katherine Johnson": 5,
+      "Anita Borg": 4
     }
   }, {
     name: "City of Seattle Open Data",
@@ -73,7 +86,8 @@ const companies = [
     interview_results: {
       "Ada Lovelace": 5,
       "Grace Hooper": 1,
-      "Katherine Johnson": 3
+      "Katherine Johnson": 3,
+      "Anita Borg": 5
     }
   }
 ];
