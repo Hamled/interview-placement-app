@@ -18,6 +18,12 @@ const StudentView = Backbone.View.extend({
     var contents = this.template(this.model.attributes);
     this.$el.html(contents);
 
+    if (this.model.get('selected')) {
+      this.$el.addClass('selected');
+    } else {
+      this.$el.removeClass('selected');
+    }
+
     // Re-bind events
     this.delegateEvents();
 

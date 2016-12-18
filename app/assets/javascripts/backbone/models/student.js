@@ -1,6 +1,7 @@
 const Student = Backbone.Model.extend({
   defaults: {
-    score: 0
+    score: 0,
+    selected: false
   },
 
   initialize: function(options) {

@@ -62,6 +62,7 @@ const students = [
   }
 ];
 
+// TODO: remove interview_results, since it's just redundant
 const companies = [
   {
     name: "Samsung",
