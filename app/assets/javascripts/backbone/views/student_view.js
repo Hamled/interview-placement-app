@@ -4,8 +4,7 @@ const StudentView = Backbone.View.extend({
   initialize: function(options) {
     console.log("In StudentView.initialize()");
 
-    // TODO: Compile once
-    this.template = _.template($('#student-template').html());
+    this.template = options.template;
 
     // Re-render whenever the model changes
     this.listenTo(this.model, 'change', this.render);

@@ -2,9 +2,9 @@ const Company = Backbone.Model.extend({
   defaults: {
 
   },
-  initialize: function() {
+  initialize: function(options) {
     console.log("In Company.initialize()");
-    this.students = new StudentCollection();
+    this.students = options.students || new StudentCollection();
     this.listenTo(this.students, 'update', this.onStudentsUpdate);
   },
 
