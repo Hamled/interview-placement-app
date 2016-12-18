@@ -24,6 +24,7 @@
 <script type="text/template" id="student-template">
   <h4>
     <%- name %>
+    (<%- score %>)
   </h4>
 </script>
 
@@ -38,6 +39,8 @@
 <script type="text/template" id="bus-details-template">
   <div>
     <p>
+      Current Score:
+      <%- score %>,
       Selected:
       <%- student ? student.get('name') : "[None]" %>
     </p>

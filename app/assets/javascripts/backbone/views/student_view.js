@@ -2,8 +2,6 @@ const StudentView = Backbone.View.extend({
   tagName: 'li',
 
   initialize: function(options) {
-    console.log("In StudentView.initialize()");
-
     this.template = options.template;
     this.bus = options.bus;
 

@@ -1,12 +1,10 @@
 const PlacementView = Backbone.View.extend({
   initialize: function(options) {
-    console.log("In PlacementView.initialize");
-
     this.studentBus = new StudentBus();
     this.busDetails = new StudentBusView({
       model: this.studentBus,
       el: this.$('#bus-details')
-    })
+    });
 
     this.unplacedStudents = new Company({
       students: options.unplacedStudents,
@@ -24,11 +22,21 @@ const PlacementView = Backbone.View.extend({
 
     this.model.each(function(company) {
       this.addCompanyView(company);
+      this.listenTo(company, 'change', this.updateScore);
     }, this);
 
     this.listenTo(this.model, 'update', this.render);
     this.listenTo(this.model, 'add', this.addCompanyView);
-    this.listenTo(this.model, 'remove', this.removeCompanyView);
+  },
+
+  updateScore: function() {
+    console.log("in PlacementView.updateScore");
+    let score = 0;
+    this.model.forEach(function(company) {
+      let company_score = company.getScore();
+      score += company_score;
+    }, this);
+    this.studentBus.set('score', score);
   },
 
   addCompanyView: function(company) {
@@ -37,10 +45,6 @@ const PlacementView = Backbone.View.extend({
       bus: this.studentBus
     });
     this.companyViews.push(companyView);
-  },
-
-  removeCompanyView: function (company) {
-    // TODO
   },
 
   render: function() {
@@ -54,9 +58,5 @@ const PlacementView = Backbone.View.extend({
     }, this);
 
     return this;
-  },
-
-  events: {
-
   }
 });

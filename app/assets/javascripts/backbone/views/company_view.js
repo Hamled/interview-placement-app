@@ -1,8 +1,6 @@
 const CompanyView = Backbone.View.extend({
   tagName: 'li',
   initialize: function(options) {
-    console.log('In CompanyView.initialize() for ' + this.model.name);
-
     // TODO: compile once and share
     this.template = _.template($('#company-template').html());
     this.studentTemplate = _.template($('#student-template').html());
@@ -11,7 +9,6 @@ const CompanyView = Backbone.View.extend({
     this.bus = options.bus;
     this.cards = [];
 
-    console.log('About to add cards for ' + this.model.students.length + ' students');
     this.model.students.forEach(function(student) {
       this.addCard(student);
     }, this);
@@ -40,7 +37,6 @@ const CompanyView = Backbone.View.extend({
     this.cards = this.cards.filter(function(card) {
       return card.model != student;
     });
-    console.log("Removed student " + student.get('name') + " from company " + this.model.get('name') + ", which now has " + this.model.students.length + " students");
   },
 
   render: function() {
@@ -49,23 +45,17 @@ const CompanyView = Backbone.View.extend({
     const contents = this.template(this.model.attributes)
     this.$el.html(contents);
     this.studentListElement = this.$('.student-list');
-    console.log(this.studentListElement);
     this.studentListElement.empty();
 
     // Render assigned students
-    console.log("Rendering " + this.model.students.length + " assigned students");
-
     // Assumption: cards will re-render themselves as needed
     this.cards.forEach(function(card) {
-      console.log(card.el);
       this.studentListElement.append(card.el);
       card.delegateEvents();
     }, this);
-    console.log(this.studentListElement);
 
     // Render empty slots
     const emptySlots = this.model.get('slots') - this.model.students.length;
-    console.log("Rendering " + emptySlots + " empty slots");
     for (let i = 0; i < emptySlots; i++) {
       this.studentListElement.append(this.emptySlotTemplate());
     }
@@ -80,8 +70,11 @@ const CompanyView = Backbone.View.extend({
   onClickEmptyStudent: function(event) {
     let student = this.bus.get('student');
     if (student) {
-      console.log("Moving student " + student.name + " into company " + this.model.name);
-      student.trigger('move', student, this.model.students);
+      console.log("Moving student " + student.get('name') + " into company " + this.model.get('name'));
+      // The move has to come before the add - that way the
+      // student has a chance to update its score before
+      // the 'add' event bubbles up to the PlacementView
+      student.trigger('move', student, this.model);
       this.model.students.add(student);
     } else {
       console.log("No student selected");

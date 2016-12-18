@@ -6,8 +6,6 @@ const StudentBusView = Backbone.View.extend({
   },
   render: function() {
     console.log("In BusView.render()");
-    console.log(this.model);
-    console.log(this.model.get('student'));
     this.$el.html(this.template(this.model.attributes));
     return this;
   }

@@ -1,9 +1,7 @@
 const Company = Backbone.Model.extend({
   defaults: {
-
   },
   initialize: function(options) {
-    console.log("In Company.initialize()");
     this.students = options.students || new StudentCollection();
 
     // Make sure we do proper listener setup on any initial
@@ -19,14 +17,11 @@ const Company = Backbone.Model.extend({
   },
 
   onStudentsUpdate: function() {
-    console.log('In Company.onStudentsUpdate');
     this.trigger('change', this)
   },
 
   onAdd: function(student) {
-    // Students emit 'move' events when they move to
-    // a different list
-    console.log("Listening for move events on student " + student.get('name'));
+    // Students emit 'move' events when they move to a different list
     this.listenTo(student, 'move', this.onMove);
   },
 
@@ -35,10 +30,28 @@ const Company = Backbone.Model.extend({
     this.stopListening(student, 'move');
   },
 
-  onMove: function(student) {
+  onMove: function(student, toCompany) {
+    // Don't bother removing if it's about to get added
+    // to us (i.e. the user clicked a company the student
+    // was already assigned to). Saves us a bunch of rendering,
+    // since nothing will have changed.
+    if (toCompany == this) {
+      console.log("DPR FLAG");
+      return;
+    }
+    
     // Remove the student from the list without
     // having to destroy it
-    console.log("In onMove for student " + student.get('name'));
     this.students.remove(student);
+  },
+
+  getScore: function() {
+    // Update this company's total score
+    let score = 0;
+    this.students.forEach(function(student) {
+      console.log("Score for " + student.get('name') + ' is ' + student.get('score'));
+      score += student.get('score');
+    }, this);
+    return score;
   }
 })
