@@ -1,8 +1,12 @@
 const UnplacedStudentsView = Backbone.View.extend({
   initialize: function(options) {
     console.log("in UnplacedStudents.initialize()");
+    console.log(this.el);
+
+    console.log("student count: " + this.model.length)
 
     this.cards = [];
+    this.studentListElement = this.$('.student-list');
 
     this.model.forEach(function(student) {
       this.addCard(student);
@@ -12,6 +16,8 @@ const UnplacedStudentsView = Backbone.View.extend({
     this.listenTo(this.model, 'add', this.addCard);
     this.listenTo(this.model, 'remove', this.removeCard);
     this.listenTo(this.model, 'update', this.render);
+
+    this.render();
   },
 
   addCard: function(student) {
@@ -31,11 +37,11 @@ const UnplacedStudentsView = Backbone.View.extend({
   render: function() {
     console.log("in UnplacedStudents.render()");
 
-    this.$el.empty();
+    this.studentListElement.empty();
 
     // Assumption: cards will re-render themselves as needed
     this.cards.forEach(function(card) {
-      this.$el.append(card.el);
+      this.studentListElement.append(card.el);
     }, this);
 
     return this;

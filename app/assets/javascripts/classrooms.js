@@ -50,11 +50,41 @@ const students = [
   }
 ];
 
+const companies = [
+  {
+    name: "Samsung",
+    slots: 1,
+    interview_results: {
+      "Ada Lovelace": 4,
+      "Grace Hooper": 2,
+      "Katherine Johnson": 5
+    }
+  }, {
+    name: "City of Seattle Open Data",
+    slots: 1,
+    interview_results: {
+      "Ada Lovelace": 3,
+      "Grace Hooper": 5,
+      "Katherine Johnson": 4
+    }
+  }, {
+    name: "Pivotal Labs",
+    slots: 2,
+    interview_results: {
+      "Ada Lovelace": 5,
+      "Grace Hooper": 1,
+      "Katherine Johnson": 3
+    }
+  }
+];
+
 $(document).ready(function() {
   const unplacedStudents = new StudentCollection(students);
-  const unplacedStudentsView = new UnplacedStudentsView({
-    model: unplacedStudents,
-    el: '#unplaced-students'
-  });
-  unplacedStudentsView.render();
+  const companyCollection = new CompanyCollection(companies);
+  const application = new PlacementView({
+    unplacedStudents: unplacedStudents,
+    model: companyCollection,
+    el: '#application'
+  })
+  application.render();
 });

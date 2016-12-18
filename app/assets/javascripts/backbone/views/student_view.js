@@ -10,6 +10,8 @@ const StudentView = Backbone.View.extend({
     // Re-render whenever the model changes
     this.listenTo(this.model, 'change', this.render);
 
+    this.$el.addClass("student");
+
     // Cards should always be ready to place on the page
     this.render();
   },

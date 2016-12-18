@@ -7,3 +7,32 @@ ul {
   margin: 0;
   padding: 0;
 }
+
+.company {
+  background-color: #c0c0c0;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.company h3 {
+  font-size: 1.4rem;
+}
+
+.student {
+  background-color: #e2e2e2;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.student h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0px;
+}
+
+.student.empty {
+  background-color: #808080;
+}

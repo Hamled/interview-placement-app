@@ -5,21 +5,26 @@
       <li>City of Seattle Open Data</li>
       <li>Pivotal Labs</li>
     </ul>
-    <ul id="unplaced-students" class="large-3 columns">
-    </ul>
+    <aside id="unplaced-students" class="company large-3 columns">
+      <h3>
+        Unplaced Students
+      </h3>
+      <ul class="student-list">
+      </ul>
+    </aside>
   </main>
 </div>
 
 <script type="text/template" id="company-template">
   <h3>
-    <%%- company.name %>
+    <%%- name %>
   </h3>
-  <ul class="company-students">
+  <ul class="student-list">
   </ul>
 </script>
 
 <script type="text/template" id="student-template">
-  <h3>
+  <h4>
     <%%- name %>
-  </h3>
+  </h4>
 </script>
