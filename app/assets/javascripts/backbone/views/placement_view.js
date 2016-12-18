@@ -28,7 +28,7 @@ const PlacementView = Backbone.View.extend({
 
   addCompanyView: function(company) {
     const companyView = new CompanyView({
-      model: company
+      model: company,
     });
     this.companyViews.push(companyView);
   },
@@ -43,6 +43,7 @@ const PlacementView = Backbone.View.extend({
     this.companyListElement.empty();
 
     this.companyViews.forEach(function(companyView) {
+      companyView.$el.addClass('large-4 columns');
       this.companyListElement.append(companyView.el);
     }, this);
 

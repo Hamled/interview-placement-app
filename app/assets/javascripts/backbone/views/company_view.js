@@ -10,7 +10,7 @@ const CompanyView = Backbone.View.extend({
     this.studentTemplate = _.template($('#student-template').html());
     this.emptySlotTemplate = _.template($('#empty-slot-template').html());
 
-    this.$el.addClass("company");
+    // this.$el.addClass("company");
 
     this.cards = [];
 

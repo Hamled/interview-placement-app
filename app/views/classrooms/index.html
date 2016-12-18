@@ -1,22 +1,20 @@
 <div id="application">
-  <main>
-    <ul id="companies" class="large-9 columns">
-      <li>Samsung</li>
-      <li>City of Seattle Open Data</li>
-      <li>Pivotal Labs</li>
+  <main class="large-9 columns">
+    <ul id="companies" class="row">
     </ul>
-    <aside id="unplaced-students" class="company large-3 columns">
-
-    </aside>
   </main>
+  <aside id="unplaced-students" class="large-3 columns">
+  </aside>
 </div>
 
 <script type="text/template" id="company-template">
-  <h3>
-    <%- name %>
-  </h3>
-  <ul class="student-list">
-  </ul>
+  <div class="company">
+    <h3>
+      <%- name %>
+    </h3>
+    <ul class="student-list">
+    </ul>
+  </div>
 </script>
 
 <script type="text/template" id="student-template">
