@@ -1,17 +1,14 @@
 const CompanyView = Backbone.View.extend({
   tagName: 'li',
-  initialize: function() {
+  initialize: function(options) {
     console.log('In CompanyView.initialize() for ' + this.model.name);
-    console.log(this.el);
-    console.log(this.model.students)
 
     // TODO: compile once and share
     this.template = _.template($('#company-template').html());
     this.studentTemplate = _.template($('#student-template').html());
     this.emptySlotTemplate = _.template($('#empty-slot-template').html());
 
-    // this.$el.addClass("company");
-
+    this.bus = options.bus;
     this.cards = [];
 
     console.log('About to add cards for ' + this.model.students.length + ' students');
@@ -31,15 +28,19 @@ const CompanyView = Backbone.View.extend({
     // Create a new card for the student
     const card = new StudentView({
       model: student,
-      template: this.studentTemplate
+      template: this.studentTemplate,
+      bus: this.bus
     });
 
     // Add it to our list of cards
     this.cards.push(card);
   },
 
-  removeCard: function() {
-    // TODO: find the student, stop listening to it, and drop it from the list
+  removeCard: function(student) {
+    this.cards = this.cards.filter(function(card) {
+      return card.model != student;
+    });
+    console.log("Removed student " + student.get('name') + " from company " + this.model.get('name') + ", which now has " + this.model.students.length + " students");
   },
 
   render: function() {
@@ -58,6 +59,7 @@ const CompanyView = Backbone.View.extend({
     this.cards.forEach(function(card) {
       console.log(card.el);
       this.studentListElement.append(card.el);
+      card.delegateEvents();
     }, this);
     console.log(this.studentListElement);
 
@@ -69,5 +71,20 @@ const CompanyView = Backbone.View.extend({
     }
 
     return this;
+  },
+
+  events: {
+    'click .empty.student': 'onClickEmptyStudent'
+  },
+
+  onClickEmptyStudent: function(event) {
+    let student = this.bus.get('student');
+    if (student) {
+      console.log("Moving student " + student.name + " into company " + this.model.name);
+      student.trigger('move', student, this.model.students);
+      this.model.students.add(student);
+    } else {
+      console.log("No student selected");
+    }
   }
 })

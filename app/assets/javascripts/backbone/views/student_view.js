@@ -5,6 +5,7 @@ const StudentView = Backbone.View.extend({
     console.log("In StudentView.initialize()");
 
     this.template = options.template;
+    this.bus = options.bus;
 
     // Re-render whenever the model changes
     this.listenTo(this.model, 'change', this.render);
@@ -27,6 +28,11 @@ const StudentView = Backbone.View.extend({
   },
 
   events: {
+    'click': 'onClick'
+  },
 
+  onClick: function(event) {
+    console.log("Student clicked");
+    this.bus.selectStudent(this.model);
   }
 })

@@ -1,9 +1,13 @@
 const PlacementView = Backbone.View.extend({
   initialize: function(options) {
     console.log("In PlacementView.initialize");
-    console.log(this.el);
 
-    console.log(options.unplacedStudents)
+    this.studentBus = new StudentBus();
+    this.busDetails = new StudentBusView({
+      model: this.studentBus,
+      el: this.$('#bus-details')
+    })
+
     this.unplacedStudents = new Company({
       students: options.unplacedStudents,
       slots: 24,
@@ -11,7 +15,8 @@ const PlacementView = Backbone.View.extend({
     });
     this.unplacedStudentsView = new CompanyView({
       model: this.unplacedStudents,
-      el: this.$('#unplaced-students')
+      el: this.$('#unplaced-students'),
+      bus: this.studentBus
     });
 
     this.companyViews = [];
@@ -29,6 +34,7 @@ const PlacementView = Backbone.View.extend({
   addCompanyView: function(company) {
     const companyView = new CompanyView({
       model: company,
+      bus: this.studentBus
     });
     this.companyViews.push(companyView);
   },
