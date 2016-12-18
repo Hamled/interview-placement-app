@@ -9,8 +9,12 @@ const StudentBus = Backbone.Model.extend({
     this.set('student', student);
     this.listenTo(student, 'move', this.unselectStudent);
   },
-  unselectStudent: function(student, company) {
-    this.stopListening(student, 'move');
+  unselectStudent: function() {
+    this.stopListening(this.get('student'), 'move');
     this.set('student', null);
+  },
+  hasStudent: function() {
+    // !! for truthyness
+    return !!this.get('student');
   }
 });
