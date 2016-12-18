@@ -32,5 +32,6 @@ const StudentView = Backbone.View.extend({
   onClick: function(event) {
     console.log("Student clicked");
     this.bus.selectStudent(this.model);
+    event.stopPropagation();
   }
 })

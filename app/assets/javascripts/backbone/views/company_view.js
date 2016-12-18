@@ -64,10 +64,10 @@ const CompanyView = Backbone.View.extend({
   },
 
   events: {
-    'click .empty.student': 'onClickEmptyStudent'
+    'click': 'onClick'
   },
 
-  onClickEmptyStudent: function(event) {
+  onClick: function(event) {
     let student = this.bus.get('student');
     if (student) {
       console.log("Moving student " + student.get('name') + " into company " + this.model.get('name'));
