@@ -4,7 +4,7 @@ const Util = {
       return 'excellent-match';
     } else if (score > 15) {
       return 'good-match';
-    } else if (score > 10) {
+    } else if (score > 9) {
       return 'mediocre-match';
     } else if (score) {
       return 'bad-match';
