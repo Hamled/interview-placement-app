@@ -1,9 +1,67 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  student_ranking: 
-  interview_result: 1
+ada-space:
+  student: ada
+  company: space_labs
+  student_ranking: 4
+  interview_result: 3
 
-two:
-  student_ranking: 
-  interview_result: 1
+ada-freedom:
+  student: ada
+  company: freedom_inc
+  student_ranking: 1
+  interview_result: 5
+
+ada-stark:
+  student: ada
+  company: stark
+  student_ranking: 5
+  interview_result: 4
+
+grace-space:
+  student: grace
+  company: space_labs
+  student_ranking: 5
+  interview_result: 2
+
+grace-freedom:
+  student: grace
+  company: freedom_inc
+  student_ranking: 4
+  interview_result: 3
+
+grace-stark:
+  student: grace
+  company: stark
+  student_ranking: 1
+  interview_result: 5
+
+katherine-space:
+  student: katherine
+  company: space_labs
+  student_ranking: 1
+  interview_result: 4
+
+katherine-freedom:
+  student: katherine
+  company: freedom_inc
+  student_ranking: 4
+  interview_result: 5
+
+katherine-stark:
+  student: katherine
+  company: stark
+  student_ranking: 5
+  interview_result: 5
+
+anita-space:
+  student: anita
+  company: space_labs
+  student_ranking: 5
+  interview_result: 5
+
+anita-stark:
+  student: anita
+  company: stark
+  student_ranking: 4
+  interview_result: 4

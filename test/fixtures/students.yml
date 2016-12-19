@@ -1,7 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
+ada:
+  name: Ada Lovelace
 
-two:
-  name: MyString
+grace:
+  name: Grace Hooper
+
+katherine:
+  name: Katherine Johnson
+
+anita:
+  name: Anita Borg

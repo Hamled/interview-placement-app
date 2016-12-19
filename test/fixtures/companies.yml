@@ -1,9 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
+space_labs:
+  name: Space Labs
+  slots: 2
+
+freedom_inc:
+  name: Freedom, inc.
   slots: 1
 
-two:
-  name: MyString
+stark:
+  name: Stark Industries
   slots: 1
