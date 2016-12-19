@@ -60,6 +60,34 @@ ul, ul ul {
   background-color: #808080;
 }
 
+.excellent-match.student {
+  border-style: solid;
+  border-width: 3px;
+  border-color: #49bcff;
+  padding: 7px;
+}
+
+.good-match.student {
+  border-style: solid;
+  border-width: 3px;
+  border-color: #39b737;
+  padding: 7px;
+}
+
+.mediocre-match.student {
+  border-style: solid;
+  border-width: 3px;
+  border-color: #e2dd36;
+  padding: 7px;
+}
+
+.bad-match.student {
+  border-style: solid;
+  border-width: 3px;
+  border-color: #ef3232;
+  padding: 7px;
+}
+
 .student.selected {
   border-style: dashed;
   border-width: 3px;
