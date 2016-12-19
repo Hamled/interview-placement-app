@@ -89,9 +89,19 @@ const CompanyView = Backbone.View.extend({
   onClick: function(event) {
     let student = this.bus.get('student');
     if (student) {
+      // Click on the company the student is already in
+      // -> unselect, even if this company is full
+      if (this.model.students.contains(student)) {
+
+        this.bus.unselectStudent();
+      }
+
+      // Go no further if the student can't be added
+      // to this company for any reason
       if (!this.model.canAdd(student)) {
         return;
       }
+
       console.log("Moving student " + student.get('name') + " into company " + this.model.get('name'));
       // The move has to come before the add - that way the
       // student has a chance to update its score before
