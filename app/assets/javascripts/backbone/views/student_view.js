@@ -24,6 +24,8 @@ const StudentView = Backbone.View.extend({
       this.$el.removeClass('selected');
     }
 
+    this.$el.addClass(Util.classForScore(this.model.get('score')));
+
     // Re-bind events
     this.delegateEvents();
 

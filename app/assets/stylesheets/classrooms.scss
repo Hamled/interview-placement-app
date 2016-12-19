@@ -25,6 +25,22 @@ ul, ul ul {
   font-size: 1.4rem;
 }
 
+.excellent-match .company {
+  background-color: #49bcff;
+}
+
+.good-match .company {
+  background-color: #39b737;
+}
+
+.mediocre-match .company {
+  background-color: #e2dd36;
+}
+
+.bad-match .company {
+  background-color: #ef3232;
+}
+
 .student {
   background-color: #e2e2e2;
   border-radius: 5px;

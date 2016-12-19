@@ -7,8 +7,10 @@ const CompanyView = Backbone.View.extend({
     this.emptySlotTemplate = _.template($('#empty-slot-template').html());
 
     this.bus = options.bus;
-    this.cards = [];
+    this.listenTo(this.bus, 'select', this.showMatchQuality)
+    this.listenTo(this.bus, 'unselect', this.hideMatchQuality)
 
+    this.cards = [];
     this.model.students.forEach(function(student) {
       this.addCard(student);
     }, this);
@@ -19,6 +21,23 @@ const CompanyView = Backbone.View.extend({
     this.listenTo(this.model, 'change', this.render);
 
     this.render();
+  },
+
+  showMatchQuality: function(student) {
+    const score = student.scoreFor(this.model);
+
+    // Clear any existing score display
+    this.hideMatchQuality();
+
+    // score will be undefined (falsey) if the student
+    // didn't interview at this company
+    if (score) {
+      this.$el.addClass(Util.classForScore(score));
+    }
+  },
+
+  hideMatchQuality: function() {
+    Util.removeScoreClasses(this.el);
   },
 
   addCard: function(student) {

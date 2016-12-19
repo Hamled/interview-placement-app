@@ -22,5 +22,14 @@ const Student = Backbone.Model.extend({
     } else {
       this.set('score', 0);
     }
+  },
+
+  scoreFor: function(company) {
+    let data = this.get('companies')[company.get('name')];
+    if (data) {
+      return data.interview_result * data.student_ranking;
+    } else {
+      return undefined;
+    }
   }
 });

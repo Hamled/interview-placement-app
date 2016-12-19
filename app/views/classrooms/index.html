@@ -22,10 +22,16 @@
 </script>
 
 <script type="text/template" id="student-template">
-  <h4>
-    <%- name %>
-    (<%- score %>)
-  </h4>
+  <div class="row">
+    <h4 class="large-9 columns">
+      <%- name %>
+    </h4>
+    <% if (score) { %>
+      <h4 class="large-3 columns student-score">
+        (<%- score %>)
+      </h4>
+    <% } %>
+  </div>
 </script>
 
 <script type="text/template" id="empty-slot-template">
