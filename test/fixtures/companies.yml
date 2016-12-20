@@ -11,3 +11,7 @@ freedom_inc:
 stark:
   name: Stark Industries
   slots: 1
+
+no_students:
+  name: Company with no students, inc.
+  slots: 3
