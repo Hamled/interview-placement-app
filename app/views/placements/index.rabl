@@ -1,0 +1,2 @@
+collection @placements
+attributes :id

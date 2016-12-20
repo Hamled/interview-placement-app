@@ -37,6 +37,10 @@ gem 'rails-backbone'
 # Use Foundation for front-end stuff
 gem 'foundation-rails'
 
+# Use rabl and oj for json serialization
+gem 'rabl'
+gem 'oj'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
