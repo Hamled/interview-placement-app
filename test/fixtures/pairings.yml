@@ -4,8 +4,22 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-# column: value
+full-ada-stark:
+  placement: full
+  student: ada
+  company: stark
+
+full-grace-space:
+  placement: full
+  student: grace
+  company: space_labs
+
+full-katherine-freedom:
+  placement: full
+  student: katherine
+  company: freedom_inc
+
+full-anita-space:
+  placement: full
+  student: anita
+  company: space_labs
