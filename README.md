@@ -24,3 +24,4 @@ In no particular order:
   - Google Docs API integration?
 - A real README
   - Setup / installation instructions
+- Send emails automatically at the end
