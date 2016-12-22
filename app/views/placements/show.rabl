@@ -1,8 +1,11 @@
 object @placement
 attributes :id
 child :students do
-  attributes :name
+  attributes :id, :name
+  child :rankings do |ranking|
+    attributes :student_ranking, :interview_result, :company_id
+  end
 end
 child :companies do
-  attributes :name, :slots
+  attributes :id, :name, :slots
 end

@@ -14,10 +14,38 @@ class PlacementsControllerTest < ActionController::TestCase
     assert_response :success
     data = JSON.parse(@response.body)
 
+    assert_includes data, 'id'
+    assert_equal data['id'], placements(:full).id
+
     assert_includes data, 'students'
     assert_equal data['students'].length, placements(:full).students.count
+
+    data['students'].each do |student|
+      assert_includes student, 'id'
+      assert_includes student, 'name'
+
+      assert_includes student, 'rankings'
+      assert_equal Student.find(student['id']).rankings.count, student['rankings'].length
+
+      student['rankings'].each do |ranking|
+        assert_includes ranking, 'student_ranking'
+        assert_kind_of Numeric, ranking['student_ranking']
+
+        assert_includes ranking, 'interview_result'
+        assert_kind_of Numeric, ranking['interview_result']
+
+        assert_includes ranking, 'company_id'
+        assert_kind_of Numeric, ranking['company_id']
+      end
+    end
+
     assert_includes data, 'companies'
     assert_equal data['companies'].length, placements(:full).companies.count
+
+    data['companies'].each do |company|
+      assert_includes company, 'id'
+      assert_includes company, 'name'
+    end
   end
 
   test "Show a placement that D.N.E." do
