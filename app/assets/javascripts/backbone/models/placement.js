@@ -1,4 +1,4 @@
-const CompanyCollection = Backbone.Collection.extend({
+const Placement = Backbone.Collection.extend({
   model: Company,
 
   initialize: function(models, options) {
