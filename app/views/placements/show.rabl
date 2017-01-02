@@ -9,3 +9,6 @@ end
 child :companies do
   attributes :id, :name, :slots
 end
+child :pairings do
+  attributes :student_id, :company_id
+end

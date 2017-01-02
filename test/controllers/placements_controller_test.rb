@@ -18,6 +18,16 @@ class PlacementsControllerTest < ActionController::TestCase
     assert_equal data['id'], placements(:full).id
 
     assert_includes data, 'students'
+    assert_includes data, 'companies'
+    assert_includes data, 'pairings'
+  end
+
+  test "Placement contains students" do
+    get :show, params: {id: placements(:full).id}
+    assert_response :success
+    data = JSON.parse(@response.body)
+
+    assert_includes data, 'students'
     assert_equal data['students'].length, placements(:full).students.count
 
     data['students'].each do |student|
@@ -38,6 +48,12 @@ class PlacementsControllerTest < ActionController::TestCase
         assert_kind_of Numeric, ranking['company_id']
       end
     end
+  end
+
+  test "Placement contains companies" do
+    get :show, params: {id: placements(:full).id}
+    assert_response :success
+    data = JSON.parse(@response.body)
 
     assert_includes data, 'companies'
     assert_equal data['companies'].length, placements(:full).companies.count
@@ -45,6 +61,23 @@ class PlacementsControllerTest < ActionController::TestCase
     data['companies'].each do |company|
       assert_includes company, 'id'
       assert_includes company, 'name'
+    end
+  end
+
+  test "Placement contains pairings" do
+    get :show, params: {id: placements(:full).id}
+    assert_response :success
+    data = JSON.parse(@response.body)
+
+    assert_includes data, 'pairings'
+    assert_equal data['pairings'].length, placements(:full).pairings.count
+
+    data['pairings'].each do |pairing|
+      assert_includes pairing, 'student_id'
+      assert_not_nil placements(:full).students.find_by(id: pairing['student_id'])
+
+      assert_includes pairing, 'company_id'
+      assert_not_nil placements(:full).companies.find_by(id: pairing['company_id'])
     end
   end
 
