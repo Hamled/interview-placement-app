@@ -2,7 +2,13 @@ const Company = Backbone.Model.extend({
   defaults: {
   },
   initialize: function(options) {
-    this.students = options.students || new StudentCollection();
+    if (options.students instanceof Backbone.Collection) {
+      this.students = options.students;
+    } else if (options.students) {
+      this.students = new StudentCollection(options.students);
+    } else {
+      this.students = new StudentCollection();
+    }
 
     // Make sure we do proper listener setup on any initial
     // data we were passed

@@ -117,10 +117,10 @@ const companies = [
 ];
 
 $(document).ready(function() {
-  const unplacedStudents = new StudentCollection(students);
-  const companyCollection = new CompanyCollection(companies);
+  const companyCollection = new CompanyCollection(companies, {
+    students: students
+  });
   const application = new PlacementView({
-    unplacedStudents: unplacedStudents,
     model: companyCollection,
     el: '#application'
   })

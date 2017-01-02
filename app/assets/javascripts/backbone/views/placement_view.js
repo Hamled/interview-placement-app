@@ -6,13 +6,9 @@ const PlacementView = Backbone.View.extend({
       el: this.$('#bus-details')
     });
 
-    this.unplacedStudents = new Company({
-      students: options.unplacedStudents,
-      slots: 24,
-      name: "Unplaced Students"
-    });
+    console.log(this.model.unplacedStudents);
     this.unplacedStudentsView = new CompanyView({
-      model: this.unplacedStudents,
+      model: this.model.unplacedStudents,
       el: this.$('#unplaced-students'),
       bus: this.studentBus
     });
