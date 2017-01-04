@@ -108,7 +108,6 @@ const CompanyView = Backbone.View.extend({
       // The move has to come before the add - that way the
       // student has a chance to update its score before
       // the 'add' event bubbles up to the PlacementView
-      student.trigger('move', student, this.model);
       this.model.students.add(student);
     } else {
       console.log("No student selected");
