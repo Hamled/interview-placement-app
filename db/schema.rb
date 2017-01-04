@@ -10,13 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161219184553) do
+ActiveRecord::Schema.define(version: 20170104224341) do
+
+  create_table "classrooms", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "companies", force: :cascade do |t|
     t.string   "name"
     t.integer  "slots"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "classroom_id"
+    t.index ["classroom_id"], name: "index_companies_on_classroom_id"
   end
 
   create_table "pairings", force: :cascade do |t|
@@ -31,8 +39,10 @@ ActiveRecord::Schema.define(version: 20161219184553) do
   end
 
   create_table "placements", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "classroom_id"
+    t.index ["classroom_id"], name: "index_placements_on_classroom_id"
   end
 
   create_table "rankings", force: :cascade do |t|
@@ -48,8 +58,10 @@ ActiveRecord::Schema.define(version: 20161219184553) do
 
   create_table "students", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "classroom_id"
+    t.index ["classroom_id"], name: "index_students_on_classroom_id"
   end
 
 end

@@ -2,15 +2,20 @@
 
 ada:
   name: Ada Lovelace
+  classroom: jets
 
 grace:
   name: Grace Hooper
+  classroom: jets
 
 katherine:
   name: Katherine Johnson
+  classroom: jets
 
 anita:
   name: Anita Borg
+  classroom: jets
 
 no_company:
   name: Student with no companies
+  classroom: jets

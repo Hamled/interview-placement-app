@@ -3,15 +3,19 @@
 space_labs:
   name: Space Labs
   slots: 2
+  classroom: jets
 
 freedom_inc:
   name: Freedom, inc.
   slots: 1
+  classroom: jets
 
 stark:
   name: Stark Industries
   slots: 1
+  classroom: jets
 
 no_students:
   name: Company with no students, inc.
   slots: 3
+  classroom: jets
