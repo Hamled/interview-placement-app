@@ -94,8 +94,8 @@ const CompanyView = Backbone.View.extend({
       // Click on the company the student is already in
       // -> unselect, even if this company is full
       if (this.model.students.contains(student)) {
-
         this.bus.unselectStudent();
+        return;
       }
 
       // Go no further if the student can't be added

@@ -27,7 +27,12 @@ const Company = Backbone.Model.extend({
   },
 
   onAdd: function(student) {
-    // Students emit 'move' events when they move to a different list
+    // Trigger a move event first, to let everyone else
+    // know who now owns this student
+    student.trigger('move', student, this);
+
+    // When someone else takes control of this student,
+    // we should remove it from ourselves.
     this.listenTo(student, 'move', this.onMove);
   },
 
@@ -42,7 +47,6 @@ const Company = Backbone.Model.extend({
     // was already assigned to). Saves us a bunch of rendering,
     // since nothing will have changed.
     if (toCompany == this) {
-      console.log("DPR FLAG");
       return;
     }
 

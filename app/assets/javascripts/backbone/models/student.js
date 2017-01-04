@@ -14,11 +14,11 @@ const Student = Backbone.Model.extend({
       throw "In student.onMove, student was not this";
     }
 
-    var ranking = this.rankings.at(company.id);
+    var ranking = this.rankings.get(company.id);
     // data will be undefined if we're moving into
     // the list of unplaced students
     if (ranking) {
-      var score = ranking.interview_result * ranking.student_ranking;
+      var score = ranking.get('interview_result') * ranking.get('student_ranking');
       this.set('score', score);
     } else {
       this.set('score', 0);
@@ -26,9 +26,9 @@ const Student = Backbone.Model.extend({
   },
 
   scoreFor: function(company) {
-    var ranking = this.rankings.at(company.id);
+    var ranking = this.rankings.get(company.id);
     if (ranking) {
-      return ranking.interview_result * ranking.student_ranking;
+      return ranking.get('interview_result') * ranking.get('student_ranking');
     } else {
       return undefined;
     }

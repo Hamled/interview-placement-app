@@ -1,3 +1,6 @@
 const RankingCollection = Backbone.Collection.extend({
-  model: Ranking
+  model: Ranking,
+  modelId: function(attributes) {
+    return attributes.company_id;
+  }
 });

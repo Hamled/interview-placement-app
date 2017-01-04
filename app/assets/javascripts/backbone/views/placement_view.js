@@ -28,8 +28,7 @@ const PlacementView = Backbone.View.extend({
     console.log("in PlacementView.updateScore");
     let score = 0;
     this.model.companies.forEach(function(company) {
-      let company_score = company.getScore();
-      score += company_score;
+      score += company.getScore();
     }, this);
     this.studentBus.set('score', score);
   },
