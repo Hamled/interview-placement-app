@@ -6,7 +6,6 @@ const PlacementView = Backbone.View.extend({
       el: this.$('#bus-details')
     });
 
-    console.log(this.model.unplacedStudents);
     this.unplacedStudentsView = new CompanyView({
       model: this.model.unplacedStudents,
       el: this.$('#unplaced-students'),
@@ -44,8 +43,6 @@ const PlacementView = Backbone.View.extend({
   },
 
   render: function() {
-    console.log("in PlacementView.render()")
-
     this.companyListElement.empty();
 
     this.companyViews.forEach(function(companyView) {

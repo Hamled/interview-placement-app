@@ -2,9 +2,6 @@ const Placement = Backbone.Model.extend({
   urlRoot: 'http://localhost:3000/placements/',
 
   constructor: function(attributes, options) {
-    console.log("In Placement.initialize(), attributes looks like:");
-    console.log(attributes);
-
     this.companies = new CompanyCollection();
 
     this.unplacedStudents = new Company({
@@ -40,8 +37,8 @@ const Placement = Backbone.Model.extend({
   // }
   parse: function(response, options) {
     // XXX DPR: what if fetch is called twice?
-    console.log("In Placement.parse(), response looks like:");
-    console.log(response);
+    console.debug("In Placement.parse(), response looks like:");
+    console.debug(response);
 
     // Add all companies from the response
     this.companies.add(response.companies);
