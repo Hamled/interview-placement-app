@@ -32,5 +32,9 @@ const Student = Backbone.Model.extend({
     } else {
       return undefined;
     }
+  },
+
+  interviewedWith: function(company) {
+    return !!this.rankings.get(company.id);
   }
 });

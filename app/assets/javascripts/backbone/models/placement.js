@@ -7,6 +7,8 @@ const Placement = Backbone.Model.extend({
     this.unplacedStudents = new Company({
       slots: 24,
       name: "Unplaced Students"
+    }, {
+      requireInterview: false
     });
 
     // Call the superclass (Backbone.Model) constructor

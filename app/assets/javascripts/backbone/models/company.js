@@ -1,4 +1,5 @@
 const Company = Backbone.Model.extend({
+  requireInterview: true,
   defaults: {
   },
   initialize: function(attributes, options) {
@@ -8,6 +9,10 @@ const Company = Backbone.Model.extend({
       this.students = new StudentCollection(attributes.students);
     } else {
       this.students = new StudentCollection();
+    }
+
+    if (_.has(options, 'requireInterview')) {
+      this.requireInterview = options.requireInterview;
     }
 
     // Make sure we do proper listener setup on any initial
@@ -59,7 +64,6 @@ const Company = Backbone.Model.extend({
     // Update this company's total score
     let score = 0;
     this.students.forEach(function(student) {
-      console.log("Score for " + student.get('name') + ' is ' + student.get('score'));
       score += student.get('score');
     }, this);
     return score;
@@ -75,13 +79,13 @@ const Company = Backbone.Model.extend({
       return false;
     }
 
-    // Did the student interview with this company?
-    if (this.get('interview_results')) {
-      return student.get('name') in this.get('interview_results');
-    } else {
-      // UnplacedStudents should be the only company without any
-      // interview results, and everyone can go there
-      return true;
+    // UnplacedStudents should be the only company which
+    // doesn't require an interview. Everyone can go there.
+    if (this.requireInterview) {
+      // Did the student interview with this company?
+      return student.interviewedWith(this);
     }
+
+    return true;
   }
 })
