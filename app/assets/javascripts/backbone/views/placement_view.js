@@ -16,19 +16,19 @@ const PlacementView = Backbone.View.extend({
     this.companyViews = [];
     this.companyListElement = this.$('#companies');
 
-    this.model.each(function(company) {
+    this.model.companies.each(function(company) {
       this.addCompanyView(company);
       this.listenTo(company, 'change', this.updateScore);
     }, this);
 
-    this.listenTo(this.model, 'update', this.render);
-    this.listenTo(this.model, 'add', this.addCompanyView);
+    this.listenTo(this.model.companies, 'update', this.render);
+    this.listenTo(this.model.companies, 'add', this.addCompanyView);
   },
 
   updateScore: function() {
     console.log("in PlacementView.updateScore");
     let score = 0;
-    this.model.forEach(function(company) {
+    this.model.companies.forEach(function(company) {
       let company_score = company.getScore();
       score += company_score;
     }, this);

@@ -59,7 +59,9 @@ const CompanyView = Backbone.View.extend({
   },
 
   render: function() {
-    console.log('In CompanyView.render() for ' + this.model.get('name'));
+    console.log('In CompanyView.render() for ' +
+                this.model.get('name') +
+                " (id " + this.model.id + ")");
 
     const contents = this.template(this.model.attributes)
     this.$el.html(contents);

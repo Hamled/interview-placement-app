@@ -1,11 +1,11 @@
 const Company = Backbone.Model.extend({
   defaults: {
   },
-  initialize: function(options) {
-    if (options.students instanceof Backbone.Collection) {
-      this.students = options.students;
-    } else if (options.students) {
-      this.students = new StudentCollection(options.students);
+  initialize: function(attributes, options) {
+    if (attributes.students instanceof Backbone.Collection) {
+      this.students = attributes.students;
+    } else if (attributes.students) {
+      this.students = new StudentCollection(attributes.students);
     } else {
       this.students = new StudentCollection();
     }

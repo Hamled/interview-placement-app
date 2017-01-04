@@ -117,9 +117,10 @@ const companies = [
 ];
 
 $(document).ready(function() {
-  const placement = new Placement(companies, {
-    students: students
+  const placement = new Placement({
+    id: 545248419,
   });
+  placement.fetch();
   const application = new PlacementView({
     model: placement,
     el: '#application'
