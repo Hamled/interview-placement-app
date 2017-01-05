@@ -65,5 +65,24 @@ const Placement = Backbone.Model.extend({
       const student = this.unplacedStudents.students.remove(pair.student_id);
       this.companies.get(pair.company_id).students.add(student);
     }, this);
+  },
+
+  // return a copy, ready for serialization
+  toJSON: function() {
+    console.log("In placement.toJSON()");
+    json = {
+      id: this.id,
+      pairings: []
+    }
+    this.companies.forEach(function(company) {
+      company.students.forEach(function(student) {
+        json.pairings.push({
+          company_id: company.id,
+          student_id: student.id
+        });
+      }, this);
+    }, this);
+    console.log(json);
+    return { placement: json };
   }
 });
