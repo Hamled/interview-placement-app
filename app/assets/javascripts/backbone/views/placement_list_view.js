@@ -4,7 +4,7 @@ const PlacementListView = Backbone.View.extend({
     console.log(this.el);
     this.placementCardTemplate = _.template($('#placement-card-template').html());
     this.placementCards = [];
-    this.placementListElement = this.$('.placement-list')
+    this.placementListElement = this.$('#placement-list')
 
     this.listenTo(this.model, 'add', this.addPlacementCard);
     this.listenTo(this.model, 'update', this.render);

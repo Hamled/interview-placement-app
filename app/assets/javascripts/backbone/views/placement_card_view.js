@@ -1,5 +1,6 @@
 const PlacementCardView = Backbone.View.extend({
   tagName: 'li',
+  className: 'placement-summary large-3 columns end',
 
   initialize: function(options) {
     console.log("In cardview.init for placement " + this.model.id);

@@ -1,7 +1,7 @@
 const ApplicationView = Backbone.View.extend({
   initialize: function() {
     this.$('#classroom-chooser').hide();
-    this.$('#placement-workbench').hide();
+    this.$('#workbench').hide();
     this.placementList = new PlacementSummaryCollection();
     this.placementListView = new PlacementListView({
       model: this.placementList,
@@ -16,7 +16,7 @@ const ApplicationView = Backbone.View.extend({
     // TODO: clean up properly, don't leak
     this.$('#classroom-chooser').hide();
     this.$('#placement-chooser').hide();
-    this.$('#placement-workbench').show();
+    this.$('#workbench').show();
 
     // get details about this placement
     placementDetails = new Placement({
@@ -25,7 +25,7 @@ const ApplicationView = Backbone.View.extend({
     placementDetails.fetch();
     this.workbench = new PlacementWorkbenchView({
       model: placementDetails,
-      el: '#placement-workbench'
+      el: '#workbench'
     });
     this.workbench.render();
   }
