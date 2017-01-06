@@ -1,8 +1,7 @@
 const ApplicationView = Backbone.View.extend({
   initialize: function() {
-    console.log("in ApplicationView.initialize");
-    console.log(this.el);
-    console.log(this.$('#placement-chooser'));
+    this.$('#classroom-chooser').hide();
+    this.$('#placement-workbench').hide();
     this.placementList = new PlacementSummaryCollection();
     this.placementListView = new PlacementListView({
       model: this.placementList,
@@ -13,19 +12,11 @@ const ApplicationView = Backbone.View.extend({
 
   showPlacementWorkbench: function(placementSummary) {
     console.log("Showing workbench for placement " + placementSummary.id);
-    if (this.workbench) {
-      // If we're already in the workbench, un-render the
-      // current view and detach it from the DOM.
-      // TODO: Make sure this is cleaned up right, and
-      // we're not leaking a bunch of memory
-      this.workbench.remove();
-      this.workbench = undefined;
-    }
 
-    if (this.placementList) {
-      // remove but don't destroy the placement list
-      this.placementList.remove();
-    }
+    // TODO: clean up properly, don't leak
+    this.$('#classroom-chooser').hide();
+    this.$('#placement-chooser').hide();
+    this.$('#placement-workbench').show();
 
     // get details about this placement
     placementDetails = new Placement({
