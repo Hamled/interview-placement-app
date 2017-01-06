@@ -22,13 +22,7 @@ const Util = {
 }
 
 $(document).ready(function() {
-  const placement = new Placement({
-    id: 545248419,
-  });
-  placement.fetch();
-  const application = new PlacementView({
-    model: placement,
+  const app = new ApplicationView({
     el: '#application'
-  })
-  application.render();
+  });
 });

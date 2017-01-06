@@ -1,19 +1,41 @@
 <div id="application">
-  <header id="toolbar">
-    <button id="save-placement" class="success button">Save</button>
-  </header>
+  <section id="classroom-chooser">
+  </section>
 
-  <main class="large-9 columns">
-    <ul id="companies" class="row">
+  <section id="placement-chooser">
+    <ul class="placement-list">
     </ul>
-  </main>
+  </section>
 
-  <aside id="unplaced-students" class="large-3 columns">
-  </aside>
+  <section id="placement-workbench">
+    <header id="toolbar">
+      <button id="save-placement" class="success button">Save</button>
+    </header>
 
-  <footer id="bus-details">
-  </footer>
+    <main class="large-9 columns">
+      <ul id="companies" class="row">
+      </ul>
+    </main>
+
+    <aside id="unplaced-students" class="large-3 columns">
+    </aside>
+
+    <footer id="bus-details">
+    </footer>
+  </section>
 </div>
+
+<script type="text/template" id="placement-card-template">
+  <h3>
+    Placement <%- id %>
+  </h3>
+  <p>
+    <%- pairing_count %> of <%- student_count %> students paired
+  </p>
+  <p>
+    Last modified <%- updated_at %>
+  </p>
+</script>
 
 <script type="text/template" id="company-template">
   <div class="company">

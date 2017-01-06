@@ -1,4 +1,4 @@
-const PlacementView = Backbone.View.extend({
+const PlacementWorkbenchView = Backbone.View.extend({
   initialize: function(options) {
     this.studentBus = new StudentBus();
     this.busDetails = new StudentBusView({
