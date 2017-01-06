@@ -38,6 +38,10 @@ const Placement = Backbone.Model.extend({
   //     }, ... ]
   // }
   parse: function(response, options) {
+    if (options.fromSave) {
+      return;
+    }
+
     // XXX DPR: what if fetch is called twice?
     console.debug("In Placement.parse(), response looks like:");
     console.debug(response);

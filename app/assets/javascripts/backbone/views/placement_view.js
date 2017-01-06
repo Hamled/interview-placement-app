@@ -57,7 +57,7 @@ const PlacementView = Backbone.View.extend({
 
   onClickSave: function(event) {
     console.log("In onClickSave");
-    result = this.model.save();
+    result = this.model.save(null, { from_save: true });
     console.log(result);
   }
 });
