@@ -78,6 +78,7 @@ const Placement = Backbone.Model.extend({
     console.log("In placement.toJSON()");
     json = {
       id: this.id,
+      classroom_id: this.get('classroom_id'),
       pairings: []
     }
     this.companies.forEach(function(company) {

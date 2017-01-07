@@ -5,23 +5,25 @@ class PlacementsController < ApplicationController
     @placements = Placement.all
   end
 
+  def create
+    @placement = Placement.new(placement_create_params)
+    if @placement.save()
+      render json: {
+        id: @placement.id
+      }
+    else
+      render status: :bad_request, json: {
+        errors: @placement.errors.messages
+      }
+    end
+  end
+
   def show
   end
 
   def update
-    puts "In update, params :"
-    params.to_hash.each do |key, value|
-      puts "#{key}, #{value}"
-    end
-
-    # Remove all existing pairing for this placement,
-    # and add in all the new ones.
-    # Testing...?
-    mutator = placement_params
-    puts mutator.to_h
-
     begin
-      @placement.set_pairings(mutator['pairings'])
+      @placement.set_pairings(placement_update_params['pairings'])
 
       puts "Transaction success!"
       render json: {
@@ -44,8 +46,11 @@ private
     end
   end
 
-  def placement_params
+  def placement_update_params
     params.require(:placement).permit(pairings: [:company_id, :student_id])
   end
 
+  def placement_create_params
+    params.require(:placement).permit(:classroom_id)
+  end
 end

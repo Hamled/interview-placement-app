@@ -72,6 +72,26 @@ const ApplicationView = Backbone.View.extend({
 
   onClickNew: function() {
     console.log("New button clicked");
+    if (this.selectElement.val() == 'all') {
+      console.log("Select a classroom first!");
+    }
+    let placement = new Placement({
+      classroom_id: Number(this.selectElement.val())
+    });
+
+    // Send a POST to the server; should give us back an ID
+    placement.save(null, {
+      fromSave: true,
+      success: function(model, response, options) {
+        placement.id = response.id;
+        console.log("Created placement " + placement.id);
+
+        // Get details (students, companies) from the server
+        placement.fetch();
+
+        this.showPlacementWorkbench(placement);
+      }
+    });
   },
 
   onClickSave: function() {
