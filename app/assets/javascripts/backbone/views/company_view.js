@@ -59,10 +59,6 @@ const CompanyView = Backbone.View.extend({
   },
 
   render: function() {
-    console.debug('In CompanyView.render() for ' +
-                this.model.get('name') +
-                " (id " + this.model.id + ")");
-
     const contents = this.template(this.model.attributes)
     this.$el.html(contents);
     this.studentListElement = this.$('.student-list');

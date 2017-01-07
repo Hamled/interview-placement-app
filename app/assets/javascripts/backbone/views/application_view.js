@@ -65,15 +65,19 @@ const ApplicationView = Backbone.View.extend({
       filterId = Number(filterId);
     }
     console.log("List button clicked, value is " + filterId);
-    this.placementListView.filter(filterId);
+    if (this.placementListView) {
+      this.placementListView.filter(filterId);
+    }
   },
+
   onClickNew: function() {
     console.log("New button clicked");
   },
+
   onClickSave: function() {
-    // if (this.saveButton.hasClass('disabled')) {
-    //   return;
-    // }
     console.log("Save button clicked");
+    if (this.workbench) {
+      this.workbench.save();
+    }
   },
 });

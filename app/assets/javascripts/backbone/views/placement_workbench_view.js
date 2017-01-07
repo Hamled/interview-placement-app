@@ -51,13 +51,9 @@ const PlacementWorkbenchView = Backbone.View.extend({
     return this;
   },
 
-  events: {
-    'click #save-placement': 'onClickSave'
-  },
-
-  onClickSave: function(event) {
-    console.log("In onClickSave");
-    result = this.model.save(null, { from_save: true });
+  save: function() {
+    console.log("Saving placement");
+    result = this.model.save(null, { fromSave: true });
     console.log(result);
   }
 });
