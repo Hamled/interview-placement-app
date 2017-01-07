@@ -1,0 +1,120 @@
+<div id="application">
+  <header id="placement-chooser-toolbar">
+    <h2 class="large-7 columns">
+      Click a placement to go to the workbench
+    </h2>
+
+    <div class="large-5 columns">
+      <select id="classroom-select" class="large-6 columns">
+      </select>
+      <div class="button-group large-6 columns">
+        <button class="button" id="toolbar-list-button">
+          List
+        </button>
+        <button class="button" id="toolbar-new-button">
+          New
+        </button>
+        <button class="disabled success button" id="toolbar-save-button">
+          Save
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="classroom-chooser">
+    </section>
+
+    <section id="placement-chooser">
+      <ul id="placement-list" class="row">
+      </ul>
+    </section>
+
+    <section id="workbench">
+      <header id="workbench-toolbar">
+      </header>
+
+      <section class="large-9 columns">
+        <ul id="companies" class="row">
+        </ul>
+      </section>
+
+      <aside id="unplaced-students" class="large-3 columns">
+      </aside>
+
+      <footer id="bus-details">
+      </footer>
+    </section>
+  </main>
+</div>
+
+<!-- Underscore templates are set to use #
+     instead of %, to not conflict with ERB -->
+<script type="text/template" id="placement-card-template">
+  <h3>
+    Placement <#- id #>
+  </h3>
+  <p>
+    <#- pairing_count #> of <#- student_count #> students paired
+  </p>
+  <p>
+    Last modified <#- updated_at #>
+  </p>
+</script>
+
+<script type="text/template" id="company-template">
+  <div class="company">
+    <h3>
+      <#- name #>
+    </h3>
+    <ul class="student-list">
+    </ul>
+  </div>
+</script>
+
+<script type="text/template" id="student-template">
+  <div class="row">
+    <h4 class="large-9 columns">
+      <#- name #>
+    </h4>
+    <# if (score) { #>
+      <h4 class="large-3 columns student-score">
+        (<#- score #>)
+      </h4>
+    <# } #>
+  </div>
+</script>
+
+<script type="text/template" id="empty-slot-template">
+  <li class='empty student'>
+    <h4>
+      &nbsp;
+    </h4>
+  </li>
+</script>
+
+<script type="text/template" id="bus-details-template">
+  <div>
+    <p>
+      Current Score:
+      <#- score #>,
+      Selected:
+      <#- student ? student.get('name') : "[None]" #>
+    </p>
+  </div>
+</script>
+
+<!-- This all is ERB, not Underscore -->
+<script type="text/javascript" id="classroom-data">
+  window.classroomData = [
+    <% @classrooms.each do |classroom| %>
+      {
+        id: <%= classroom.id %>,
+        name: "<%= classroom.name %>",
+        student_count: <%= classroom.students.length %>,
+        company_count: <%= classroom.companies.length %>,
+        placement_count: <%= classroom.placements.length %>
+      },
+    <% end %>
+  ]
+</script>

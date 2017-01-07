@@ -1,3 +1,10 @@
+// Use <# for underscore templates so we don't conflict with ERB
+_.templateSettings = {
+  interpolate: /\<\#\=(.+?)\#\>/g,
+  escape: /\<\#\-(.+?)\#\>/g,
+  evaluate: /\<\#(.+?)\#\>/g
+};
+
 const Util = {
   classForScore: function(score) {
     if (score > 20) {
@@ -23,6 +30,7 @@ const Util = {
 
 $(document).ready(function() {
   const app = new ApplicationView({
-    el: '#application'
+    el: '#application',
+    classroomData: window.classroomData
   });
 });

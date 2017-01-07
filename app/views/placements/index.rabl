@@ -1,5 +1,5 @@
 collection @placements
-attributes :id, :updated_at
+attributes :id, :updated_at, :classroom_id
 node :student_count do |placement|
   placement.students.length
 end

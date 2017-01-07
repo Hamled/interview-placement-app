@@ -2,6 +2,10 @@ const PlacementListView = Backbone.View.extend({
   initialize: function() {
     console.log("In PLV.initialize, this.el:")
     console.log(this.el);
+
+    // Do not filter by default
+    this.filterId = 'all';
+
     this.placementCardTemplate = _.template($('#placement-card-template').html());
     this.placementCards = [];
     this.placementListElement = this.$('#placement-list')
@@ -27,9 +31,12 @@ const PlacementListView = Backbone.View.extend({
     console.log("In PLV.render")
     this.placementListElement.empty();
     this.placementCards.forEach(function(card) {
-      console.log("Adding HTML:");
-      console.log(card.el);
-      this.placementListElement.append(card.$el);
+      console.log(card.model.get('classroom_id'));
+      console.log(this.filterId);
+      if (this.filterId == 'all' ||
+          card.model.get('classroom_id') == this.filterId) {
+        this.placementListElement.append(card.$el);
+      }
     }, this);
 
     this.delegateEvents();
@@ -38,5 +45,10 @@ const PlacementListView = Backbone.View.extend({
 
   onSelect: function(placement) {
     this.trigger('select', placement);
+  },
+
+  filter: function(roomId) {
+    this.filterId = roomId;
+    this.render();
   }
 });
