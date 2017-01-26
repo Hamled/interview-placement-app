@@ -7,8 +7,6 @@ const ApplicationView = Backbone.View.extend({
     this.newButton = this.$('#toolbar-new-button');
     this.saveButton = this.$('#toolbar-save-button');
 
-    this.$('#classroom-chooser').hide();
-    this.$('#workbench').hide();
     this.placementList = new PlacementSummaryCollection();
     this.placementListView = new PlacementListView({
       model: this.placementList,
@@ -16,7 +14,17 @@ const ApplicationView = Backbone.View.extend({
     });
     this.listenTo(this.placementListView, 'select', this.showPlacementWorkbench);
 
+    this.showPlacementList();
+
     this.render();
+  },
+
+  showPlacementList: function() {
+    console.log("Showing placement list");
+
+    this.$('#classroom-chooser').hide();
+    this.$('#workbench').hide();
+    this.$('#placement-chooser').show();
   },
 
   showPlacementWorkbench: function(placementSummary) {
@@ -68,6 +76,8 @@ const ApplicationView = Backbone.View.extend({
     if (this.placementListView) {
       this.placementListView.filter(filterId);
     }
+
+    this.showPlacementList();
   },
 
   onClickNew: function() {
@@ -85,7 +95,7 @@ const ApplicationView = Backbone.View.extend({
       fromSave: true,
       success: function(model, response, options) {
         placement.id = response.id;
-        console.log("Created placement " + placement.id);.fetch();
+        console.log("Created placement " + placement.id);
 
         this.showPlacementWorkbench(placement);
       }.bind(this)
