@@ -77,14 +77,21 @@ const CompanyView = Backbone.View.extend({
       this.studentListElement.append(this.emptySlotTemplate());
     }
 
+    this.$el.droppable({
+      drop: this.onDrop.bind(this)
+    });
+
     return this;
   },
 
   events: {
-    'click': 'onClick'
+    'click': 'onClick',
+    'dragover': 'onDragover',
+    'drop': 'onDrop'
   },
 
   onClick: function(event) {
+    console.log("In CompanyView.onClick")
     let student = this.bus.get('student');
     if (student) {
       // Click on the company the student is already in
@@ -108,5 +115,16 @@ const CompanyView = Backbone.View.extend({
     } else {
       console.log("No student selected");
     }
+  },
+
+  onDragover: function(event) {
+    event.preventDefault();
+  },
+
+  onDrop: function(event) {
+    console.log("In CompanyView.onDrop()");
+    // event.preventDefault();
+    // TODO: extract to third function
+    this.onClick(event);
   }
 })

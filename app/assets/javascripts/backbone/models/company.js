@@ -2,6 +2,7 @@ const Company = Backbone.Model.extend({
   requireInterview: true,
   defaults: {
   },
+  
   initialize: function(attributes, options) {
     if (attributes.students instanceof Backbone.Collection) {
       this.students = attributes.students;

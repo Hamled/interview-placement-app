@@ -8,11 +8,11 @@ _.templateSettings = {
 const Util = {
   classForScore: function(score) {
     if (score > 20) {
-      return 'excellent-match';
+      return 'match excellent-match';
     } else if (score > 15) {
-      return 'good-match';
+      return 'match good-match';
     } else if (score > 9) {
-      return 'mediocre-match';
+      return 'match mediocre-match';
     } else if (score) {
       return 'bad-match';
     } else {

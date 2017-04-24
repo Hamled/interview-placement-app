@@ -26,6 +26,13 @@ const StudentView = Backbone.View.extend({
 
     this.$el.addClass(Util.classForScore(this.model.get('score')));
 
+    this.$el.draggable({
+      start: this.onDragStart.bind(this),
+      snap: '.match .empty.student',
+      snapMode: 'inner',
+      snapTolerance: 10
+    });
+
     // Re-bind events
     this.delegateEvents();
 
@@ -39,9 +46,15 @@ const StudentView = Backbone.View.extend({
 
   onClick: function(event) {
     console.log("Student clicked");
-    if (!this.bus.hasStudent()) {
+    if (!this.bus.hasStudent() ) {
       this.bus.selectStudent(this.model);
       event.stopPropagation();
     }
+  },
+
+  onDragStart: function(event) {
+    console.log("In student.onDragStart");
+    // TODO: when selected, the element is redrawn, removing it from under the mouse!
+    this.bus.selectStudent(this.model);
   }
 })

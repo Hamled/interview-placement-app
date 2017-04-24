@@ -12,6 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui/widgets/draggable
+//= require jquery-ui/widgets/droppable
 //= require foundation
 //= require turbolinks
 //= require underscore
