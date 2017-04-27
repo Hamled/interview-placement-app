@@ -28,9 +28,12 @@ const StudentView = Backbone.View.extend({
 
     this.$el.draggable({
       start: this.onDragStart.bind(this),
-      snap: '.match .empty.student',
+      stop: this.onDragStop.bind(this),
+      helper: 'clone',
+      snap: '.match .empty.student, #unplaced-students .empty.student',
       snapMode: 'inner',
-      snapTolerance: 10
+      snapTolerance: 10,
+      revert: 'invalid'
     });
 
     // Re-bind events
@@ -53,8 +56,15 @@ const StudentView = Backbone.View.extend({
   },
 
   onDragStart: function(event) {
-    console.log("In student.onDragStart");
     // TODO: when selected, the element is redrawn, removing it from under the mouse!
     this.bus.selectStudent(this.model);
+    // this.model.
+  },
+
+  onDragStop: function(event) {
+    // Stop event triggers *after* the drop event
+    if (this.bus.hasStudent()) {
+      this.bus.unselectStudent();
+    }
   }
 })

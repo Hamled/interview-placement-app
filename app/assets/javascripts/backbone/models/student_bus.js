@@ -5,7 +5,7 @@ const StudentBus = Backbone.Model.extend({
     student: null,
     score: 0
   },
-  
+
   selectStudent: function(student) {
     currentStudent = this.get('student');
     if (currentStudent) {

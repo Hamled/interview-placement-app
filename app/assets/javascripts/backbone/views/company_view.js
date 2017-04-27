@@ -59,16 +59,22 @@ const CompanyView = Backbone.View.extend({
   },
 
   render: function() {
+    // console.log("In company.render for " + this.model.get("name"));
     const contents = this.template(this.model.attributes)
     this.$el.html(contents);
     this.studentListElement = this.$('.student-list');
     this.studentListElement.empty();
 
-    // Render assigned students
-    // Assumption: cards will re-render themselves as needed
+    // Add assigned students to the list
     this.cards.forEach(function(card) {
+      // Make sure the student is all the way rendered
+      // XXX DPR: wouldn't expect to need this, but it seems that the classes added by
+      // jquery-draggable don't stay attached to the element's $el.
+      // Probably a similar problem to the delegate events thing.
+      // For now just re-render, since that's cheap anyway, maybe look into
+      // adding functionality to delegateEvents in the future.
+      card.render();
       this.studentListElement.append(card.el);
-      card.delegateEvents();
     }, this);
 
     // Render empty slots
@@ -78,7 +84,11 @@ const CompanyView = Backbone.View.extend({
     }
 
     this.$el.droppable({
-      drop: this.onDrop.bind(this)
+      drop: this.onDrop.bind(this),
+      accept: function (element) {
+        const student = this.bus.get('student');
+        return student && !this.model.students.contains(student) && this.model.canAdd(student);
+      }.bind(this)
     });
 
     return this;
