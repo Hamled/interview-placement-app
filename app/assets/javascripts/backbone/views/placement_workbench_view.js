@@ -8,6 +8,7 @@ const PlacementWorkbenchView = Backbone.View.extend({
     this.undoManager = new Backbone.UndoManager();
 
     this.undoManager.register(this.model.unplacedStudents.students);
+    this.model.unplacedStudents.students.on('all', console.log, console);
     this.unplacedStudentsView = new CompanyView({
       model: this.model.unplacedStudents,
       el: this.$('#unplaced-students'),
@@ -19,6 +20,7 @@ const PlacementWorkbenchView = Backbone.View.extend({
 
     this.model.companies.each(function(company) {
       this.undoManager.register(company.students);
+      company.students.on('all', console.log, console);
       this.addCompany(company);
     }, this);
 
