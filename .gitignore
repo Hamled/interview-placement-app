@@ -54,3 +54,6 @@ bower.json
 
 # SSL Certs
 ssl/*
+
+# NPM stuff
+node_modules

@@ -1,0 +1,22 @@
+{
+  "name": "internship-placer",
+  "version": "1.0.0",
+  "description": "App for placing Ada Developers Academy students in internships",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/droberts-ada/interview-placement-app.git"
+  },
+  "author": "Dan Roberts",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/droberts-ada/interview-placement-app/issues"
+  },
+  "homepage": "https://github.com/droberts-ada/interview-placement-app#readme"
+}

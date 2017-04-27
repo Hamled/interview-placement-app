@@ -21,6 +21,7 @@
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/internship_placer
+//= require backbone-undo/Backbone.Undo
 //= require_tree .
 
 $(function(){ $(document).foundation(); });
