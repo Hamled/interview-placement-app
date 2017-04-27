@@ -6,6 +6,7 @@ const ApplicationView = Backbone.View.extend({
     this.listButton = this.$('#toolbar-list-button');
     this.newButton = this.$('#toolbar-new-button');
     this.saveButton = this.$('#toolbar-save-button');
+    this.undoButton = this.$('#toolbar-undo-button');
 
     this.placementList = new PlacementSummaryCollection();
     this.placementListView = new PlacementListView({
@@ -36,6 +37,7 @@ const ApplicationView = Backbone.View.extend({
     this.$('#workbench').show();
 
     this.saveButton.removeClass('disabled');
+    this.undoButton.removeClass('disabled');
 
     // get details about this placement
     placementDetails = new Placement({
@@ -65,6 +67,7 @@ const ApplicationView = Backbone.View.extend({
     "click #toolbar-list-button": "onClickList",
     "click #toolbar-new-button": "onClickNew",
     "click #toolbar-save-button:not(.disabled)": "onClickSave",
+    "click #toolbar-undo-button:not(.disabled)": "onClickUndo",
   },
 
   onClickList: function() {
@@ -108,4 +111,11 @@ const ApplicationView = Backbone.View.extend({
       this.workbench.save();
     }
   },
+
+  onClickUndo: function() {
+    console.log("Undo button clicked");
+    if (this.workbench) {
+      this.workbench.undo();
+    }
+  }
 });

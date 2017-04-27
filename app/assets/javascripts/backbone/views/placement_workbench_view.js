@@ -5,7 +5,9 @@ const PlacementWorkbenchView = Backbone.View.extend({
       model: this.studentBus,
       el: this.$('#bus-details')
     });
+    this.undoManager = new Backbone.UndoManager();
 
+    this.undoManager.register(this.model.unplacedStudents.students);
     this.unplacedStudentsView = new CompanyView({
       model: this.model.unplacedStudents,
       el: this.$('#unplaced-students'),
@@ -16,11 +18,14 @@ const PlacementWorkbenchView = Backbone.View.extend({
     this.companyListElement = this.$('#companies');
 
     this.model.companies.each(function(company) {
+      this.undoManager.register(company.students);
       this.addCompany(company);
     }, this);
 
     this.listenTo(this.model.companies, 'update', this.render);
     this.listenTo(this.model.companies, 'add', this.addCompany);
+
+    this.undoManager.startTracking();
   },
 
   updateScore: function() {
@@ -55,5 +60,20 @@ const PlacementWorkbenchView = Backbone.View.extend({
     console.log("Saving placement");
     result = this.model.save(null, { fromSave: true });
     console.log(result);
+  },
+
+  undo: function() {
+    console.log("Undoing action, available: " + this.undoManager.isAvailable("undo"));
+    console.log("Before");
+    this.model.companies.forEach(function(company) {
+      console.log(  company.get('name') + ": " + company.students.length)
+    }, this);
+
+    this.undoManager.undo(false);
+
+    console.log("After");
+    this.model.companies.forEach(function(company) {
+      console.log(  company.get('name') + ": " + company.students.length)
+    }, this);
   }
 });
