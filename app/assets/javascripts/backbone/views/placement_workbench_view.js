@@ -8,7 +8,6 @@ const PlacementWorkbenchView = Backbone.View.extend({
     this.undoManager = new Backbone.UndoManager();
 
     this.undoManager.register(this.model.unplacedStudents.students);
-    this.model.unplacedStudents.students.on('all', console.log, console);
     this.unplacedStudentsView = new CompanyView({
       model: this.model.unplacedStudents,
       el: this.$('#unplaced-students'),
@@ -20,7 +19,6 @@ const PlacementWorkbenchView = Backbone.View.extend({
 
     this.model.companies.each(function(company) {
       this.undoManager.register(company.students);
-      company.students.on('all', console.log, console);
       this.addCompany(company);
     }, this);
 
@@ -30,12 +28,17 @@ const PlacementWorkbenchView = Backbone.View.extend({
     this.undoManager.startTracking();
   },
 
-  updateScore: function() {
+  onCompanyChange: function() {
+    // update scores
     let score = 0;
     this.model.companies.forEach(function(company) {
       score += company.getScore();
     }, this);
     this.studentBus.set('score', score);
+
+    // Trigger a global "student-move" event for anyone
+    // who's listening (the ApplicationView)
+    this.trigger('student-move')
   },
 
   addCompany: function(company) {
@@ -44,7 +47,7 @@ const PlacementWorkbenchView = Backbone.View.extend({
       bus: this.studentBus
     });
     this.companyViews.push(companyView);
-    this.listenTo(company, 'change', this.updateScore);
+    this.listenTo(company, 'change', this.onCompanyChange);
   },
 
   render: function() {
@@ -59,23 +62,34 @@ const PlacementWorkbenchView = Backbone.View.extend({
   },
 
   save: function() {
-    console.log("Saving placement");
+    console.debug("Saving placement");
     result = this.model.save(null, { fromSave: true });
     console.log(result);
   },
 
   undo: function() {
-    console.log("Undoing action, available: " + this.undoManager.isAvailable("undo"));
-    console.log("Before");
-    this.model.companies.forEach(function(company) {
-      console.log(  company.get('name') + ": " + company.students.length)
-    }, this);
+    console.debug("Undoing action");
 
-    this.undoManager.undo(false);
+    // Undo twice: once for selecting the student, and once for the move
+    // TODO DPR: figure out why the undomanager is picking
+    // up the student select, since I only registered the collections
+    this.undoManager.undo(true);
+    this.undoManager.undo(true);
+  },
 
-    console.log("After");
-    this.model.companies.forEach(function(company) {
-      console.log(  company.get('name') + ": " + company.students.length)
-    }, this);
+  redo: function() {
+    console.debug("Redoing action");
+
+    // As above, need to fire twice
+    this.undoManager.redo(true);
+    this.undoManager.redo(true);
+  },
+
+  canUndo: function() {
+    return this.undoManager.isAvailable('undo');
+  },
+
+  canRedo: function() {
+    return this.undoManager.isAvailable('redo');
   }
 });

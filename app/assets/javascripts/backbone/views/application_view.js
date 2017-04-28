@@ -7,6 +7,7 @@ const ApplicationView = Backbone.View.extend({
     this.newButton = this.$('#toolbar-new-button');
     this.saveButton = this.$('#toolbar-save-button');
     this.undoButton = this.$('#toolbar-undo-button');
+    this.redoButton = this.$('#toolbar-redo-button');
 
     this.placementList = new PlacementSummaryCollection();
     this.placementListView = new PlacementListView({
@@ -17,7 +18,36 @@ const ApplicationView = Backbone.View.extend({
 
     this.showPlacementList();
 
+    // Listen to key presses on the whole document
+    $(document).on('keydown', this.onKeypress.bind(this));
+
     this.render();
+  },
+
+  toggleButtons: function() {
+    console.log("in togglebuttons");
+    if (this.workbench) {
+      this.saveButton.removeClass('disabled');
+
+      // Undo button
+      if (this.workbench.canUndo()) {
+        this.undoButton.removeClass('disabled');
+      } else {
+        this.undoButton.addClass('disabled');
+      }
+
+      // Redo button
+      if (this.workbench.canRedo()) {
+        this.redoButton.removeClass('disabled');
+      } else {
+        this.redoButton.addClass('disabled');
+      }
+
+    } else {
+      this.saveButton.addClass('disabled');
+      this.undoButton.addClass('disabled');
+      this.redoButton.addClass('disabled');
+    }
   },
 
   showPlacementList: function() {
@@ -26,6 +56,8 @@ const ApplicationView = Backbone.View.extend({
     this.$('#classroom-chooser').hide();
     this.$('#workbench').hide();
     this.$('#placement-chooser').show();
+
+    this.toggleButtons();
   },
 
   showPlacementWorkbench: function(placementSummary) {
@@ -36,19 +68,22 @@ const ApplicationView = Backbone.View.extend({
     this.$('#placement-chooser').hide();
     this.$('#workbench').show();
 
-    this.saveButton.removeClass('disabled');
-    this.undoButton.removeClass('disabled');
-
     // get details about this placement
     placementDetails = new Placement({
       id: placementSummary.id
     });
-    placementDetails.fetch();
-    this.workbench = new PlacementWorkbenchView({
-      model: placementDetails,
-      el: '#workbench'
+    placementDetails.fetch({
+      success: function() {
+        this.workbench = new PlacementWorkbenchView({
+          model: placementDetails,
+          el: '#workbench'
+        });
+        this.workbench.render();
+
+        this.toggleButtons();
+        this.listenTo(this.workbench, 'student-move', this.toggleButtons)
+      }.bind(this)
     });
-    this.workbench.render();
   },
 
   render: function() {
@@ -59,6 +94,8 @@ const ApplicationView = Backbone.View.extend({
       this.selectElement.append("<option value=\"" + room.id + "\">" + room.name + "</option>");
     }, this);
 
+    this.toggleButtons();
+
     this.delegateEvents();
     return this;
   },
@@ -66,8 +103,29 @@ const ApplicationView = Backbone.View.extend({
   events: {
     "click #toolbar-list-button": "onClickList",
     "click #toolbar-new-button": "onClickNew",
-    "click #toolbar-save-button:not(.disabled)": "onClickSave",
-    "click #toolbar-undo-button:not(.disabled)": "onClickUndo",
+    "click #toolbar-save-button:not(.disabled)": "onSave",
+    "click #toolbar-undo-button:not(.disabled)": "onUndo",
+    "click #toolbar-redo-button:not(.disabled)": "onRedo",
+  },
+
+  onKeypress: function(event) {
+    var code = event.keyCode || event.which;
+    var command = event.ctrlKey || event.metaKey;
+    if (command && code == 83) {
+      // cmd+s -> save
+      this.onSave();
+      event.preventDefault();
+
+    } else if (command && event.shiftKey && code == 90) {
+      // cmd+shift+u -> redo
+      this.onRedo()
+      event.preventDefault();
+
+    } else if (command && code == 90) {
+      // cmd+u -> undo
+      this.onUndo();
+      event.preventDefault();
+    }
   },
 
   onClickList: function() {
@@ -105,17 +163,24 @@ const ApplicationView = Backbone.View.extend({
     });
   },
 
-  onClickSave: function() {
-    console.log("Save button clicked");
+  onSave: function() {
+    console.debug("Save button clicked");
     if (this.workbench) {
       this.workbench.save();
     }
   },
 
-  onClickUndo: function() {
-    console.log("Undo button clicked");
+  onUndo: function() {
+    console.debug("Undo button clicked");
     if (this.workbench) {
       this.workbench.undo();
+    }
+  },
+
+  onRedo: function() {
+    console.debug("Redo button clicked");
+    if (this.workbench) {
+      this.workbench.redo();
     }
   }
 });
