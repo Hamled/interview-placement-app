@@ -44,12 +44,20 @@ gem 'foundation-rails'
 gem 'rabl'
 gem 'oj'
 
+# Google API for OAuth and getting interview results
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+gem 'signet'
+gem 'google-api-client', require: 'google/apis/sheets_v4'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
 
   # Set up environment from .env
   gem 'dotenv-rails'
+
+  gem 'awesome_print'
 end
 
 group :development do
@@ -65,6 +73,8 @@ group :development do
 
   # Use pry for rails console
   gem 'pry-rails'
+
+  gem 'binding_of_caller'
 end
 
 group :test do

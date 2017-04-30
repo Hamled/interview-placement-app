@@ -8,6 +8,11 @@
       <select id="classroom-select" class="large-6 columns">
       </select>
       <div class="button-group large-6 columns">
+        <% if @current_user %>
+          <%= link_to "Log Out", logout_path, class: "button", id: "toolbar-logout-button" %>
+        <% else %>
+          <%= link_to "Log In", "/auth/google_oauth2", class: "button", id: "toolbar-login-button" %>
+        <% end %>
         <button class="button" id="toolbar-list-button">
           List
         </button>
