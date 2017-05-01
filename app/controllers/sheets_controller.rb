@@ -1,26 +1,9 @@
 class SheetsController < ApplicationController
   before_action :require_login
 
-  class AccessToken
-    attr_reader :token
-    def initialize(token)
-      @token = token
-    end
-
-    def apply!(headers)
-      headers['Authorization'] = "Bearer #{@token}"
-    end
-  end
-
   def index
 
     access_token = AccessToken.new(@current_user.oauth_token)
-
-    # client = Signet::OAuth2::Client.new(
-    #   client_id: ENV['GOOGLE_OAUTH_CLIENT_ID'],
-    #   client_secret: ENV['GOOGLE_OAUTH_CLIENT_SECRET'],
-    #   access_token: @current_user.oauth_token
-    # )
 
     google_sheets = Google::Apis::SheetsV4::SheetsService.new
     google_sheets.authorization = access_token

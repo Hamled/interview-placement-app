@@ -1,0 +1,39 @@
+<h2>Interview Results</h2>
+<table>
+  <thead>
+    <tr>
+      <% @interview_results[0].each do |column| %>
+        <th><%= column %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @interview_results[1..-1].each do |row| %>
+      <tr>
+        <% row.each do |column| %>
+          <td><%= column %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Student Rankings</h2>
+<table>
+  <thead>
+    <tr>
+      <% @student_ranks[0].each do |column| %>
+        <th><%= column %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @student_ranks[1..-1].each do |row| %>
+      <tr>
+        <% row.each do |column| %>
+          <td><%= column %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -14,5 +14,8 @@ module InternshipPlacer
 
     # Add NPM modules
     config.assets.paths << Rails.root.join('node_modules')
+
+    # Automatically load all code from <rails_root>/lib
+    config.autoload_paths << Rails.root.join('lib')
   end
 end

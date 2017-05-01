@@ -1,0 +1,19 @@
+<section>
+  <%= form_for @classroom do |f| %>
+    <%= f.label :name, "Classroom name" %>
+    <%= f.text_field :name %>
+
+    <section>
+      <h3>Finding Spreadsheet IDs</h3>
+      <%= image_tag "spreadsheet_id.png", alt: "How to find a spreadsheet's ID" %>
+
+      <%= f.label :interview_result_spreadsheet %>
+      <%= f.text_field :interview_result_spreadsheet %>
+
+      <%= f.label :student_ranking_spreadsheet %>
+      <%= f.text_field :student_ranking_spreadsheet %>
+    </section>
+
+    <%= f.submit class: "button" %>
+  <% end %>
+</section>

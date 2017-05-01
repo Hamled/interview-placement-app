@@ -1,0 +1,32 @@
+<h2>Classroom List</h2>
+
+<section class="button-group">
+  <%= link_to "Add a new Classroom", new_classroom_path, class: "button" %>
+</section>
+
+<table>
+  <thead>
+    <tr>
+      <td>Name</td>
+      <td>Students</td>
+      <td>Companies</td>
+      <td>Placements</td>
+      <td>New Placement</td>
+      <td>Added</td>
+      <td>Added By</td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @classrooms.each do |classroom| %>
+      <tr>
+        <td><%= link_to classroom.name, classroom_path(classroom) %></td>
+        <td><%= classroom.students.count %></td>
+        <td><%= classroom.companies.count %></td>
+        <td><%= button_to "#{classroom.placements.count}", '#', class: "button" %></td>
+        <td><%= button_to "Start", '#', class: "button" %></td>
+        <td><%= classroom.created_at %></td>
+        <td><%= classroom.creator.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

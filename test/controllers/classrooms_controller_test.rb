@@ -1,7 +1,7 @@
 require 'test_helper'
 
-class ClassroomsControllerTest < ActionController::TestCase
-  test "the truth" do
-    get :index
-  end
+class ClassroomsControllerTest < ActionDispatch::IntegrationTest
+  # test "the truth" do
+  #   assert true
+  # end
 end
