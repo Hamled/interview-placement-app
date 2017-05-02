@@ -2,18 +2,22 @@
 <table>
   <thead>
     <tr>
-      <% @interview_results[0].each do |column| %>
-        <th><%= column %></th>
-      <% end %>
+      <th>Name</th>
+      <th>Company</th>
+      <th>Result</th>
+      <th>Reason</th>
     </tr>
   </thead>
   <tbody>
-    <% @interview_results[1..-1].each do |row| %>
-      <tr>
-        <% row.each do |column| %>
-          <td><%= column %></td>
-        <% end %>
-      </tr>
+    <% @interview_results.each do |student, results| %>
+      <% results.each do |company, result| %>
+        <tr>
+          <td><%= student %></td>
+          <td><%= company %></td>
+          <td><%= result[:score] %></td>
+          <td><%= result[:reason] %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
@@ -22,18 +26,20 @@
 <table>
   <thead>
     <tr>
-      <% @student_ranks[0].each do |column| %>
-        <th><%= column %></th>
-      <% end %>
+      <th>Name</th>
+      <th>Company</th>
+      <th>Ranking</th>
     </tr>
   </thead>
   <tbody>
-    <% @student_ranks[1..-1].each do |row| %>
-      <tr>
-        <% row.each do |column| %>
-          <td><%= column %></td>
-        <% end %>
-      </tr>
+    <% @student_ranks.each do |student, rankings| %>
+      <% rankings.each do |company, rank| %>
+        <tr>
+          <td><%= student %></td>
+          <td><%= company %></td>
+          <td><%= rank %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

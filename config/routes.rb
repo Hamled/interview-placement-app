@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :placements, only: [:index, :create, :show, :update]
   resources :classrooms do
     member do
+      get 'populate'
       post 'populate'
     end
   end

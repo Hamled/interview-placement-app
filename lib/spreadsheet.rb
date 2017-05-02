@@ -1,4 +1,6 @@
 class Spreadsheet
+  class SpreadsheetError < StandardError; end
+
   def initialize(spreadsheet_id, user)
     @spreadsheet_id = spreadsheet_id
     @user = user
