@@ -3,7 +3,7 @@ attributes :id
 child :students do
   attributes :id, :name
   child :rankings do |ranking|
-    attributes :student_ranking, :interview_result, :company_id
+    attributes :student_preference, :interview_result, :company_id
   end
 end
 child :companies do

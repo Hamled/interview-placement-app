@@ -68,8 +68,8 @@ class InterviewResultSpreadsheet < Spreadsheet
       end
 
       parsed_data[name][company] = {
-        score: RESULT_POINTS[result],
-        reason: datum["Reason for Hiring Decision"]
+        'score' => RESULT_POINTS[result],
+        'reason' => datum["Reason for Hiring Decision"]
       }
     end
 

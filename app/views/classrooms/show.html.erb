@@ -2,7 +2,7 @@
 <p>Added <%= @classroom.created_at %> by <%= @classroom.creator.name %></p>
 
 <p>Interview results spreadsheet: <%= link_to @classroom.interview_result_spreadsheet || "Not Set", "https://docs.google.com/spreadsheets/d/#{@classroom.interview_result_spreadsheet}" %></p>
-<p>Student ranking spreadsheet: <%= link_to @classroom.student_ranking_spreadsheet || "Not Set", "https://docs.google.com/spreadsheets/d/#{@classroom.student_ranking_spreadsheet}" %></p>
+<p>Student ranking spreadsheet: <%= link_to @classroom.student_preference_spreadsheet || "Not Set", "https://docs.google.com/spreadsheets/d/#{@classroom.student_preference_spreadsheet}" %></p>
 
 <% if @classroom.students.count == 0 && @classroom.companies.count == 0 %>
   <p>

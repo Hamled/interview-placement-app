@@ -62,17 +62,20 @@ class ClassroomsController < ApplicationController
     # flash[:message] = "Not yet implemented"
     # redirect_to classroom_path(params[:classroom_id])
     interview_sheet = InterviewResultSpreadsheet.new(@classroom.interview_result_spreadsheet, @current_user)
-    @interview_results = interview_sheet.populate
+    interviews = interview_sheet.populate
 
-    student_sheet = StudentRankingSpreadsheet.new(@classroom.student_ranking_spreadsheet, @current_user)
-    @student_ranks = student_sheet.populate
+    student_sheet = StudentPreferenceSpreadsheet.new(@classroom.student_preference_spreadsheet, @current_user)
+    preferences = student_sheet.populate
 
-    render :populate
+    @classroom.from_spreadsheets(interviews, preferences)
+
+    # render :populate
+    redirect_to classroom_path(@classroom)
   end
 
 private
   def classroom_params
-    params.require(:classroom).permit(:name, :interview_result_spreadsheet, :student_ranking_spreadsheet)
+    params.require(:classroom).permit(:name, :interview_result_spreadsheet, :student_preference_spreadsheet)
   end
 
   def find_classroom

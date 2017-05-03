@@ -38,8 +38,8 @@ class PlacementsControllerTest < ActionController::TestCase
       assert_equal Student.find(student['id']).rankings.count, student['rankings'].length
 
       student['rankings'].each do |ranking|
-        assert_includes ranking, 'student_ranking'
-        assert_kind_of Numeric, ranking['student_ranking']
+        assert_includes ranking, 'student_preference'
+        assert_kind_of Numeric, ranking['student_preference']
 
         assert_includes ranking, 'interview_result'
         assert_kind_of Numeric, ranking['interview_result']

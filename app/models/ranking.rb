@@ -5,7 +5,7 @@ class Ranking < ApplicationRecord
   validates :student, uniqueness: {scope: :company}
 
   # numericality implies presence: true
-  validates :student_ranking, numericality: {
+  validates :student_preference, numericality: {
     only_integer: true,
     greater_than: 0,
     less_than_or_equal_to: 5

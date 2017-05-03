@@ -3,65 +3,65 @@
 ada_space:
   student: ada
   company: space_labs
-  student_ranking: 4
+  student_preference: 4
   interview_result: 3
 
 ada_freedom:
   student: ada
   company: freedom_inc
-  student_ranking: 1
+  student_preference: 1
   interview_result: 5
 
 ada_stark:
   student: ada
   company: stark
-  student_ranking: 5
+  student_preference: 5
   interview_result: 4
 
 grace_space:
   student: grace
   company: space_labs
-  student_ranking: 5
+  student_preference: 5
   interview_result: 2
 
 grace_freedom:
   student: grace
   company: freedom_inc
-  student_ranking: 4
+  student_preference: 4
   interview_result: 3
 
 grace_stark:
   student: grace
   company: stark
-  student_ranking: 1
+  student_preference: 1
   interview_result: 5
 
 katherine_space:
   student: katherine
   company: space_labs
-  student_ranking: 1
+  student_preference: 1
   interview_result: 4
 
 katherine_freedom:
   student: katherine
   company: freedom_inc
-  student_ranking: 4
+  student_preference: 4
   interview_result: 5
 
 katherine_stark:
   student: katherine
   company: stark
-  student_ranking: 5
+  student_preference: 5
   interview_result: 5
 
 anita_space:
   student: anita
   company: space_labs
-  student_ranking: 5
+  student_preference: 5
   interview_result: 5
 
 anita_stark:
   student: anita
   company: stark
-  student_ranking: 4
+  student_preference: 4
   interview_result: 4

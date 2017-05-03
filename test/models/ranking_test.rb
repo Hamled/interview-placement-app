@@ -5,7 +5,7 @@ class RankingTest < ActiveSupport::TestCase
     ranking_data = {
       student: students(:no_company),
       company: companies(:no_students),
-      student_ranking: 3,
+      student_preference: 3,
       interview_result: 5
     }
     # create! throws on failure
@@ -15,7 +15,7 @@ class RankingTest < ActiveSupport::TestCase
   test "Cannot create ranking without student" do
     ranking_data = {
       company: companies(:no_students),
-      student_ranking: 3,
+      student_preference: 3,
       interview_result: 5
     }
     r = Ranking.create(ranking_data)
@@ -26,7 +26,7 @@ class RankingTest < ActiveSupport::TestCase
   test "Cannot create ranking without company" do
     ranking_data = {
       student: students(:no_company),
-      student_ranking: 3,
+      student_preference: 3,
       interview_result: 5
     }
     r = Ranking.create(ranking_data)
@@ -34,7 +34,7 @@ class RankingTest < ActiveSupport::TestCase
     assert_includes r.errors.messages, :company
   end
 
-  test "Cannot create ranking without student_ranking" do
+  test "Cannot create ranking without student_preference" do
     ranking_data = {
       student: students(:no_company),
       company: companies(:no_students),
@@ -42,14 +42,14 @@ class RankingTest < ActiveSupport::TestCase
     }
     r = Ranking.create(ranking_data)
     assert_not r.valid?
-    assert_includes r.errors.messages, :student_ranking
+    assert_includes r.errors.messages, :student_preference
   end
 
   test "Cannot create ranking without interview_result" do
     ranking_data = {
       student: students(:no_company),
       company: companies(:no_students),
-      student_ranking: 3
+      student_preference: 3
     }
     r = Ranking.create(ranking_data)
     assert_not r.valid?
@@ -72,35 +72,35 @@ class RankingTest < ActiveSupport::TestCase
     }
 
     # Not integer
-    ranking_data[:student_ranking] = 3.3
+    ranking_data[:student_preference] = 3.3
     r = Ranking.create(ranking_data)
     assert_not r.valid?
-    assert_includes r.errors.messages, :student_ranking
+    assert_includes r.errors.messages, :student_preference
 
     # Not number
-    ranking_data[:student_ranking] = 'foo bar'
+    ranking_data[:student_preference] = 'foo bar'
     r = Ranking.create(ranking_data)
     assert_not r.valid?
-    assert_includes r.errors.messages, :student_ranking
+    assert_includes r.errors.messages, :student_preference
 
     # Under
-    ranking_data[:student_ranking] = 0
+    ranking_data[:student_preference] = 0
     r = Ranking.create(ranking_data)
     assert_not r.valid?
-    assert_includes r.errors.messages, :student_ranking
+    assert_includes r.errors.messages, :student_preference
 
     # Over
-    ranking_data[:student_ranking] = 6
+    ranking_data[:student_preference] = 6
     r = Ranking.create(ranking_data)
     assert_not r.valid?
-    assert_includes r.errors.messages, :student_ranking
+    assert_includes r.errors.messages, :student_preference
   end
 
   test "Interview result must be integer, 0 < i <= 5" do
     ranking_data = {
       student: students(:no_company),
       company: companies(:no_students),
-      student_ranking: 4
+      student_preference: 4
     }
 
     # Not integer

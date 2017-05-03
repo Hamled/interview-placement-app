@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170430235906) do
+ActiveRecord::Schema.define(version: 20170502195909) do
 
   create_table "classrooms", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.integer  "creator_id"
     t.string   "interview_result_spreadsheet"
-    t.string   "student_ranking_spreadsheet"
+    t.string   "student_preference_spreadsheet"
     t.index ["creator_id"], name: "index_classrooms_on_creator_id"
   end
 
@@ -52,10 +52,11 @@ ActiveRecord::Schema.define(version: 20170430235906) do
   create_table "rankings", force: :cascade do |t|
     t.integer  "student_id"
     t.integer  "company_id"
-    t.integer  "student_ranking"
+    t.integer  "student_preference"
     t.integer  "interview_result"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.string   "interview_result_reason"
     t.index ["company_id"], name: "index_rankings_on_company_id"
     t.index ["student_id"], name: "index_rankings_on_student_id"
   end

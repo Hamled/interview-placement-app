@@ -33,7 +33,7 @@ const Placement = Backbone.Model.extend({
   //         "rankings": [ {
   //             "company_id": 739272092,
   //             "interview_result": 3,
-  //             "student_ranking": 4
+  //             "student_preference": 4
   //         }, ... ]
   //     }, ... ]
   // }
