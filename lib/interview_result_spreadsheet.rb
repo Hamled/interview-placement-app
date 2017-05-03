@@ -33,10 +33,8 @@ class InterviewResultSpreadsheet < Spreadsheet
       headers.each_with_index do |key, i|
         if row[i].nil? or row[i].empty? or IGNORE_HEADERS.include? key
           next
-
         else
           datum[key] = row[i]
-
         end
       end
 
@@ -45,16 +43,19 @@ class InterviewResultSpreadsheet < Spreadsheet
       result = datum["Hiring Decision"]
 
       # Do some error handling
+      # raw_data has had the headers chopped, and google sheets
+      # indexes from 1 not 0, so the row in the error message
+      # needs to be modified accordingly
       if name.nil? || name.empty?
-        errors << "Row #{row_index}: missing Student Name"
+        errors << "Row #{row_index+2}: missing Student Name"
       end
       if company.nil? || company.empty?
-        errors << "Row #{row_index}: missing Company"
+        errors << "Row #{row_index+2}: missing Company"
       end
       if result.nil? || result.empty?
-        errors << "Row #{row_index}: missing Hiring Decision"
+        errors << "Row #{row_index+2}: missing Hiring Decision"
       elsif !RESULT_POINTS.include? result
-        errors << "Row #{row_index}: invalid Hiring Decision '#{result}'"
+        errors << "Row #{row_index+2}: invalid Hiring Decision '#{result}'"
       end
 
       # Add a new entry for this student if needed
@@ -64,7 +65,7 @@ class InterviewResultSpreadsheet < Spreadsheet
 
       # Check for duplicates
       if parsed_data[name].include? company
-        errors << "Row #{row_index}: duplicate Student Name / Company pair (#{name} / #{company})"
+        errors << "Row #{row_index+2}: duplicate Student Name / Company pair (#{name} / #{company})"
       end
 
       parsed_data[name][company] = {

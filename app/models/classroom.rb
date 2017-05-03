@@ -75,6 +75,12 @@ class Classroom < ApplicationRecord
         end
       end
 
+      # Figure out how many internship slots each company has
+      self.companies.each do |company|
+        company.slots = company.rankings.count / self.interviews_per_slot + 1
+        company.save!
+      end
+
       if errors.length > 0
         error_text = "Encountered errors while building classroom records:"
         errors.each do |error|

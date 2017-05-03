@@ -10,15 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170502195909) do
+ActiveRecord::Schema.define(version: 20170503175721) do
 
   create_table "classrooms", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.integer  "creator_id"
     t.string   "interview_result_spreadsheet"
     t.string   "student_preference_spreadsheet"
+    t.integer  "interviews_per_slot",            default: 6
     t.index ["creator_id"], name: "index_classrooms_on_creator_id"
   end
 

@@ -75,7 +75,7 @@ class ClassroomsController < ApplicationController
 
 private
   def classroom_params
-    params.require(:classroom).permit(:name, :interview_result_spreadsheet, :student_preference_spreadsheet)
+    params.require(:classroom).permit(:name, :interview_result_spreadsheet, :student_preference_spreadsheet, :interviews_per_slot)
   end
 
   def find_classroom
