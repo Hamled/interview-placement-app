@@ -10,7 +10,7 @@ class PlacementsController < ApplicationController
   end
 
   def create
-    @placement = Placement.new(classroom_id: params[:classroom_id])
+    @placement = Placement.build(classroom_id: params[:classroom_id])
     if @placement.save()
       redirect_to placement_path(@placement)
     else

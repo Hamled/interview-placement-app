@@ -32,7 +32,7 @@
 <script type="text/template" id="placement-card-template">
   <a href="<#- url #>">
     <h3>
-      Placement <#- id #>
+      Placement <#- name ? name : id #>
     </h3>
     <p>
       Classroom: <#- classroom_name #>
@@ -54,6 +54,7 @@
     <% @placements.each do |placement| %>
       {
         id: <%= placement.id %>,
+        name: "<%= placement.name %>",
         updated_at: "<%= placement.updated_at %>",
         classroom_id: <%= placement.classroom_id %>,
         classroom_name: "<%= placement.classroom.name %>",

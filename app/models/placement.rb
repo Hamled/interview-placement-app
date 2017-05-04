@@ -27,4 +27,12 @@ class Placement < ApplicationRecord
     end
     return self.pairings
   end
+
+  def self.build(options)
+    p = self.new(options)
+    unless p.name
+      p.name = Faker::Food.ingredient
+    end
+    return p
+  end
 end

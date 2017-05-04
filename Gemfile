@@ -53,6 +53,8 @@ gem 'omniauth-google-oauth2'
 gem 'signet'
 gem 'google-api-client', require: 'google/apis/sheets_v4'
 
+gem 'faker'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
