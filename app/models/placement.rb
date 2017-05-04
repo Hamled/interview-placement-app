@@ -35,4 +35,15 @@ class Placement < ApplicationRecord
     end
     return p
   end
+
+  def score
+    sum = 0
+    self.pairings.each do |pairing|
+      ranking = Ranking.find_by(student_id: pairing.student_id, company_id: pairing.company_id)
+      if ranking
+        sum += ranking.student_preference * ranking.interview_result
+      end
+    end
+    return sum
+  end
 end

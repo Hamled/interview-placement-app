@@ -1,61 +1,122 @@
-<h2><%= @classroom.name %></h2>
-<p>Added <%= @classroom.created_at %> by <%= @classroom.creator.name %></p>
+<div class="row">
+  <section class="columns large-9 small-12">
+    <h2><%= @classroom.name %></h2>
+    <p>Added <%= @classroom.created_at %> by <%= @classroom.creator.name %></p>
 
-<p>Interview results spreadsheet: <%= link_to @classroom.interview_result_spreadsheet || "Not Set", "https://docs.google.com/spreadsheets/d/#{@classroom.interview_result_spreadsheet}" %></p>
-<p>Student ranking spreadsheet: <%= link_to @classroom.student_preference_spreadsheet || "Not Set", "https://docs.google.com/spreadsheets/d/#{@classroom.student_preference_spreadsheet}" %></p>
+    <p>Interview results spreadsheet: <%= link_to @classroom.interview_result_spreadsheet || "Not Set", "https://docs.google.com/spreadsheets/d/#{@classroom.interview_result_spreadsheet}" %></p>
+    <p>Student ranking spreadsheet: <%= link_to @classroom.student_preference_spreadsheet || "Not Set", "https://docs.google.com/spreadsheets/d/#{@classroom.student_preference_spreadsheet}" %></p>
 
-<p>Interviews per internship slot: <%= @classroom.interviews_per_slot %>
-
-<% if @classroom.students.count == 0 && @classroom.companies.count == 0 %>
-  <p>
-    Looks like this classroom's data hasn't been loaded yet.
-    <%= button_to "Load from spreadsheets", populate_classroom_path(@classroom), class: "button" %>
-  </p>
-
-<% else %>
-  <p>
-    <%= button_to "Reload from spreadsheets", populate_classroom_path(@classroom), class: "warning button" %>
-    Warning: this will destroy any existing placements for this classroom!
-  </p>
-  <section class="columns large-6 small-12">
-    <h3><%= @classroom.students.count %> Students</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @classroom.students.each do |student| %>
-          <tr>
-            <td><%= student.name %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <p>Interviews per internship slot: <%= @classroom.interviews_per_slot %></p>
   </section>
 
-  <section class="columns large-6 small-12">
-    <h3><%= @classroom.companies.count %> Companies</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @classroom.companies.each do |company| %>
-          <tr>
-            <td><%= company.name %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+  <section class="button-group columns large-3 small-12">
+    <%= link_to "Classroom List", classrooms_path, class: "button" %>
+    <%= link_to "Edit Classroom", edit_classroom_path(@classroom), class: "button" %>
+    <%= link_to "Delete Classroom", classroom_path, method: :delete, data: { confirm: "This will destroy all placements for this classroom! Are you absolutely sure?" }, class: "alert button" %>
   </section>
-<% end %>
+</div>
 
-<section class="button-group">
-  <%= link_to "Classroom List", classrooms_path, class: "button" %>
-  <%= link_to "Edit Classroom", edit_classroom_path(@classroom), class: "button" %>
-  <%= link_to "Delete Classroom", classroom_path, method: :delete, data: { confirm: "This will destroy all placements for this classroom! Are you absolutely sure?" }, class: "alert button" %>
-</section>
+<div class="row">
+  <% if @classroom.students.count == 0 && @classroom.companies.count == 0 %>
+    <p>
+      Looks like this classroom's data hasn't been loaded yet.
+      <%= button_to "Load from spreadsheets", populate_classroom_path(@classroom), class: "button" %>
+    </p>
+
+  <% else %>
+    <p>
+      <%= button_to "Reload from spreadsheets", populate_classroom_path(@classroom), class: "warning button" %>
+      Warning: this will destroy any existing placements for this classroom!
+    </p>
+
+    <section class="columns small-12">
+      <h3><%= @classroom.placements.count %> Placements</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Students Placed</th>
+            <th>Score</th>
+            <th>Created By</th>
+            <th>Last Modified</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @classroom.placements.each do |placement| %>
+            <tr>
+              <td><%= link_to placement.name ? placement.name : placement.id, placement_path(placement) %></td>
+              <td><%= placement.pairings.count %> of <%= @classroom.students.count %></td>
+              <td><%= placement.score %></td>
+              <td>TODO DPR</td>
+              <td><%= placement.created_at %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="columns large-6 small-12">
+      <h3><%= @classroom.students.count %> Students</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @classroom.students.each do |student| %>
+            <tr>
+              <td><%= student.name %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="columns large-6 small-12">
+      <h3><%= @classroom.companies.count %> Companies</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @classroom.companies.each do |company| %>
+            <tr>
+              <td><%= company.name %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="columns small-12">
+      <h3><%= @classroom.rankings.count %> Rankings</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Company</th>
+            <th>Student Preference</th>
+            <th>Interview Result</th>
+            <th>Interview Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @classroom.students.each do |student| %>
+            <% student.rankings.each_with_index do |ranking, i| %>
+              <tr>
+                <td><%= i == 0 ? student.name : "" %></td>
+                <td><%= ranking.company.name %></td>
+                <td><%= ranking.student_preference %></td>
+                <td><%= ranking.interview_result %></td>
+                <td><%= ranking.interview_result_reason %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+  <% end %>
+</div>

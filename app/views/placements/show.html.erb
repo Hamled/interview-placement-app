@@ -1,5 +1,14 @@
 <header class="clearfix">
-  <h2 class="float-left">Placement <%= @placement.name ? "<em>#{@placement.name}</em> (#{@placement.id})".html_safe : @placemnt.id %> for <%= @placement.classroom.name %></h2>
+  <h2 class="float-left">
+    Placement
+    <% if @placement.name %>
+      <em><%= @placement.name %></em>
+      (<%= @placement.id %>)
+    <% else %>
+      <%= @placemnt.id %>
+    <% end %>
+    for <%= link_to @placement.classroom.name, classroom_path(@placement.classroom) %>
+  </h2>
 
   <nav class="float-right button-group" id="toolbar">
     <button class="success button" id="toolbar-save-button">
