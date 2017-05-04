@@ -2,19 +2,22 @@ class PlacementsController < ApplicationController
   before_action :find_placement, only: [:show, :update]
 
   def index
+    @classrooms = Classroom.all
     @placements = Placement.all
+
+    # If the request was for a particular classroom, filter for it
+    @classroom_id = params[:classroom_id]
   end
 
   def create
-    @placement = Placement.new(placement_create_params)
+    @placement = Placement.new(classroom_id: params[:classroom_id])
     if @placement.save()
-      render json: {
-        id: @placement.id
-      }
+      redirect_to placement_path(@placement)
     else
-      render status: :bad_request, json: {
-        errors: @placement.errors.messages
-      }
+      flash[:status] = :failure
+      flash[:message] = "Could not create placement"
+      flash[:errors] = @placement.errors.messages
+      redirect_back
     end
   end
 
@@ -48,9 +51,5 @@ private
 
   def placement_update_params
     params.require(:placement).permit(pairings: [:company_id, :student_id])
-  end
-
-  def placement_create_params
-    params.require(:placement).permit(:classroom_id)
   end
 end

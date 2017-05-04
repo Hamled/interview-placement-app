@@ -1,0 +1,66 @@
+<div id="placement-chooser" class="row">
+  <header id="placement-chooser-toolbar" class="row">
+    <h2 class="large-7 columns">
+      Click a placement to go to the workbench
+    </h2>
+
+    <div class="large-5 columns">
+      <%= select_tag "classroom",
+          options_from_collection_for_select(@classrooms, :id, :name, @classroom_id),
+          include_blank: "All Classrooms",
+          id: "classroom-select",
+          class: "large-6 columns"
+      %>
+      <div class="button-group large-6 columns">
+
+        <button class="button" id="toolbar-filter-button">
+          Filter
+        </button>
+        <%= link_to "New", "javascript: void(0)", method: :post, class: "button", id: "toolbar-new-button" %>
+      </div>
+    </div>
+  </header>
+
+  <ul id="placement-list" class="row">
+  </ul>
+</div>
+
+
+
+<!-- Underscore templates are set to use #
+     instead of %, to not conflict with ERB -->
+<script type="text/template" id="placement-card-template">
+  <a href="<#- url #>">
+    <h3>
+      Placement <#- id #>
+    </h3>
+    <p>
+      Classroom: <#- classroom_name #>
+    </p>
+    <p>
+      <#- pairing_count #> of <#- student_count #> students paired
+    </p>
+    <p>
+      Last modified <#- updated_at #>
+    </p>
+  </a>
+</script>
+
+
+
+<!-- This all is ERB, not Underscore -->
+<script type="text/javascript" id="initial-data">
+  window.placementList = [
+    <% @placements.each do |placement| %>
+      {
+        id: <%= placement.id %>,
+        updated_at: "<%= placement.updated_at %>",
+        classroom_id: <%= placement.classroom_id %>,
+        classroom_name: "<%= placement.classroom.name %>",
+        student_count: <%= placement.classroom.students.length %>,
+        pairing_count: <%= placement.pairings.length %>,
+        url: "<%= placement_path(placement) %>"
+      },
+    <% end %>
+  ]
+</script>

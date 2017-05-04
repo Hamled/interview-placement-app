@@ -11,11 +11,11 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui/widgets/draggable
 //= require jquery-ui/widgets/droppable
 //= require foundation
-//= require turbolinks
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync
@@ -23,5 +23,6 @@
 //= require backbone/internship_placer
 //= require backbone-undo/Backbone.Undo
 //= require_tree .
+//= require turbolinks
 
 $(function(){ $(document).foundation(); });

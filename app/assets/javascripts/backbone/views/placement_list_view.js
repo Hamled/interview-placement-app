@@ -3,18 +3,30 @@ const PlacementListView = Backbone.View.extend({
     console.log("In PLV.initialize, this.el:")
     console.log(this.el);
 
+    this.bindControls();
+
     // Do not filter by default
-    this.filterId = 'all';
+    this.filterId = '';
 
     this.placementCardTemplate = _.template($('#placement-card-template').html());
     this.placementCards = [];
     this.placementListElement = this.$('#placement-list')
 
+    this.model.each(function(placement) {
+      this.addPlacementCard(placement);
+    }.bind(this));
+
     this.listenTo(this.model, 'add', this.addPlacementCard);
     this.listenTo(this.model, 'update', this.render);
+  },
 
-    // Will trigger a bunch of adds and an update
-    this.model.fetch();
+  bindControls: function() {
+    this.classroomSelect = this.$('#classroom-select');
+    this.filterButton = this.$('#toolbar-filter-button');
+    this.newButton = this.$('#toolbar-new-button');
+
+    // Get the initial setup
+    this.onClassroomSelect();
   },
 
   addPlacementCard: function(placement, collection) {
@@ -24,7 +36,7 @@ const PlacementListView = Backbone.View.extend({
       template: this.placementCardTemplate
     });
     this.placementCards.push(card);
-    this.listenTo(card, 'select', this.onSelect);
+    // this.listenTo(card, 'select', this.onSelect);
   },
 
   render: function() {
@@ -33,22 +45,40 @@ const PlacementListView = Backbone.View.extend({
     this.placementCards.forEach(function(card) {
       console.log(card.model.get('classroom_id'));
       console.log(this.filterId);
-      if (this.filterId == 'all' ||
+      if (this.filterId == '' ||
           card.model.get('classroom_id') == this.filterId) {
         this.placementListElement.append(card.$el);
       }
     }, this);
 
+    // Toggle button state
+    if (this.filterId == '') {
+    } else {
+
+    }
+
     this.delegateEvents();
     return this;
   },
 
-  onSelect: function(placement) {
-    this.trigger('select', placement);
+  events: {
+    "click #toolbar-filter-button": "onClickFilter",
+    // "click #toolbar-new-button": "onClickNew",
+    "change #classroom-select": "onClassroomSelect"
   },
 
-  filter: function(roomId) {
-    this.filterId = roomId;
+  onClickFilter: function() {
     this.render();
+  },
+
+  onClassroomSelect: function() {
+    this.filterId = this.classroomSelect.val();
+    if (this.filterId == "") {
+      this.newButton.addClass('disabled');
+      this.newButton.attr('href', 'javascript: void(0)');
+    } else {
+      this.newButton.removeClass('disabled');
+      this.newButton.attr('href', "/classrooms/" + this.filterId + "/placements");
+    }
   }
 });

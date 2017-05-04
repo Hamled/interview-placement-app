@@ -22,8 +22,8 @@
         <td><%= link_to classroom.name, classroom_path(classroom) %></td>
         <td><%= classroom.students.count %></td>
         <td><%= classroom.companies.count %></td>
-        <td><%= button_to "#{classroom.placements.count}", '#', class: "button" %></td>
-        <td><%= button_to "Start", '#', class: "button" %></td>
+        <td><%= link_to "#{classroom.placements.count}", classroom_placements_path(classroom), class: "button" %></td>
+        <td><%= link_to "Start", classroom_placements_path(classroom), method: :post, class: "button" %></td>
         <td><%= classroom.created_at %></td>
         <td><%= classroom.creator.name %></td>
       </tr>

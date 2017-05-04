@@ -33,6 +33,9 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# Make $(document).ready work as expected, despite turbolinks weirdness
+gem 'jquery-turbolinks'
+
 # JavaScript Libraries
 gem 'underscore-rails'
 gem 'rails-backbone'
