@@ -1,8 +1,6 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
-console.log("DPR: placements.js loaded")
 $(document).ready(function() {
-  console.log("DPR: document.ready fired");
   // Only run this if we're on the placements show page
   if ($('#placement-workbench').length) {
     placementDetails = new Placement({

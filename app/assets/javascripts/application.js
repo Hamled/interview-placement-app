@@ -10,12 +10,18 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+
+// BUG: Not currently including turbolinks.
+// It seems to break all my javascript, despite the
+// jquery.turbolinks module
+
 //= require jquery
-//= require jquery.turbolinks
+// require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui/widgets/draggable
 //= require jquery-ui/widgets/droppable
 //= require foundation
+// require turbolinks
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync
@@ -23,6 +29,5 @@
 //= require backbone/internship_placer
 //= require backbone-undo/Backbone.Undo
 //= require_tree .
-//= require turbolinks
 
 $(function(){ $(document).foundation(); });
