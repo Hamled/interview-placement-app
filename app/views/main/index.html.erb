@@ -19,15 +19,6 @@
         <button class="button" id="toolbar-new-button">
           New
         </button>
-        <button class="disabled success button" id="toolbar-save-button">
-          Save
-        </button>
-        <button class="disabled button" id="toolbar-undo-button">
-          Undo
-        </button>
-        <button class="disabled button" id="toolbar-redo-button">
-          Redo
-        </button>
       </div>
     </div>
   </header>
@@ -40,22 +31,6 @@
       <ul id="placement-list" class="row">
       </ul>
     </section>
-
-    <section id="workbench">
-      <header id="workbench-toolbar">
-      </header>
-
-      <section class="large-9 columns">
-        <ul id="companies" class="row">
-        </ul>
-      </section>
-
-      <aside id="unplaced-students" class="large-3 columns">
-      </aside>
-
-      <footer id="bus-details">
-      </footer>
-    </section>
   </main>
 </div>
 
@@ -66,6 +41,9 @@
     Placement <#- id #>
   </h3>
   <p>
+    Classroom: <#- classroom_name #>
+  </p>
+  <p>
     <#- pairing_count #> of <#- student_count #> students paired
   </p>
   <p>
@@ -73,47 +51,7 @@
   </p>
 </script>
 
-<script type="text/template" id="company-template">
-  <div class="company">
-    <h3>
-      <#- name #>
-    </h3>
-    <ul class="student-list">
-    </ul>
-  </div>
-</script>
 
-<script type="text/template" id="student-template">
-  <div class="row" draggable="true">
-    <h4 class="large-9 columns">
-      <#- name #>
-    </h4>
-    <# if (score) { #>
-      <h4 class="large-3 columns student-score">
-        (<#- score #>)
-      </h4>
-    <# } #>
-  </div>
-</script>
-
-<script type="text/template" id="empty-slot-template">
-  <li class='empty student'>
-    <h4>
-      &nbsp;
-    </h4>
-  </li>
-</script>
-
-<script type="text/template" id="bus-details-template">
-  <div>
-    <p>
-      Current Score:
-      <#- score #>,
-      Selected:
-      <#- student ? student.get('name') : "[None]" #>
-    </p>
-  </div>
-</script>
 
 <!-- This all is ERB, not Underscore -->
 <script type="text/javascript" id="classroom-data">
@@ -125,6 +63,17 @@
         student_count: <%= classroom.students.length %>,
         company_count: <%= classroom.companies.length %>,
         placement_count: <%= classroom.placements.length %>
+      },
+    <% end %>
+  ]
+
+  window.placementData = [
+    <% @placements.each do |placement| %>
+      {
+        id: <%= placement.id %>,
+        classroom_name: "<%= placement.classroom.name %>",
+        student_count: <%= placement.classroom.students.length %>,
+        pairing_count: <%= placement.pairings.length %>
       },
     <% end %>
   ]

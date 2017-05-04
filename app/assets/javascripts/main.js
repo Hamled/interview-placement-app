@@ -29,8 +29,8 @@ const Util = {
 }
 
 $(document).ready(function() {
-  const app = new ApplicationView({
-    el: '#application',
-    classroomData: window.classroomData
-  });
+  // const app = new ApplicationView({
+  //   el: '#application',
+  //   classroomData: window.classroomData
+  // });
 });

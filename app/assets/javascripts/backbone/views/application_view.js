@@ -5,9 +5,6 @@ const ApplicationView = Backbone.View.extend({
     this.selectElement = this.$('#classroom-select');
     this.listButton = this.$('#toolbar-list-button');
     this.newButton = this.$('#toolbar-new-button');
-    this.saveButton = this.$('#toolbar-save-button');
-    this.undoButton = this.$('#toolbar-undo-button');
-    this.redoButton = this.$('#toolbar-redo-button');
 
     this.placementList = new PlacementSummaryCollection();
     this.placementListView = new PlacementListView({
@@ -18,37 +15,11 @@ const ApplicationView = Backbone.View.extend({
 
     this.showPlacementList();
 
-    // Listen to key presses on the whole document
-    $(document).on('keydown', this.onKeypress.bind(this));
 
     this.render();
   },
 
-  toggleButtons: function() {
-    console.log("in togglebuttons");
-    if (this.workbench) {
-      this.saveButton.removeClass('disabled');
 
-      // Undo button
-      if (this.workbench.canUndo()) {
-        this.undoButton.removeClass('disabled');
-      } else {
-        this.undoButton.addClass('disabled');
-      }
-
-      // Redo button
-      if (this.workbench.canRedo()) {
-        this.redoButton.removeClass('disabled');
-      } else {
-        this.redoButton.addClass('disabled');
-      }
-
-    } else {
-      this.saveButton.addClass('disabled');
-      this.undoButton.addClass('disabled');
-      this.redoButton.addClass('disabled');
-    }
-  },
 
   showPlacementList: function() {
     console.log("Showing placement list");
@@ -103,29 +74,6 @@ const ApplicationView = Backbone.View.extend({
   events: {
     "click #toolbar-list-button": "onClickList",
     "click #toolbar-new-button": "onClickNew",
-    "click #toolbar-save-button:not(.disabled)": "onSave",
-    "click #toolbar-undo-button:not(.disabled)": "onUndo",
-    "click #toolbar-redo-button:not(.disabled)": "onRedo",
-  },
-
-  onKeypress: function(event) {
-    var code = event.keyCode || event.which;
-    var command = event.ctrlKey || event.metaKey;
-    if (command && code == 83) {
-      // cmd+s -> save
-      this.onSave();
-      event.preventDefault();
-
-    } else if (command && event.shiftKey && code == 90) {
-      // cmd+shift+u -> redo
-      this.onRedo()
-      event.preventDefault();
-
-    } else if (command && code == 90) {
-      // cmd+u -> undo
-      this.onUndo();
-      event.preventDefault();
-    }
   },
 
   onClickList: function() {
@@ -161,26 +109,5 @@ const ApplicationView = Backbone.View.extend({
         this.showPlacementWorkbench(placement);
       }.bind(this)
     });
-  },
-
-  onSave: function() {
-    console.debug("Save button clicked");
-    if (this.workbench) {
-      this.workbench.save();
-    }
-  },
-
-  onUndo: function() {
-    console.debug("Undo button clicked");
-    if (this.workbench) {
-      this.workbench.undo();
-    }
-  },
-
-  onRedo: function() {
-    console.debug("Redo button clicked");
-    if (this.workbench) {
-      this.workbench.redo();
-    }
   }
 });

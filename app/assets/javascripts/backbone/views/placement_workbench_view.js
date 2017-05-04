@@ -1,5 +1,7 @@
 const PlacementWorkbenchView = Backbone.View.extend({
   initialize: function(options) {
+    this.bindUserEvents();
+
     this.studentBus = new StudentBus();
     this.busDetails = new StudentBusView({
       model: this.studentBus,
@@ -26,6 +28,18 @@ const PlacementWorkbenchView = Backbone.View.extend({
     this.listenTo(this.model.companies, 'add', this.addCompany);
 
     this.undoManager.startTracking();
+
+    this.toggleButtons();
+  },
+
+  bindUserEvents: function() {
+    $(document).on('keydown', this.onKeypress.bind(this));
+    this.saveButton = $('#toolbar-save-button');
+    this.saveButton.on('click', this.onSave.bind(this));
+    this.undoButton = $('#toolbar-undo-button');
+    this.undoButton.on('click', this.onUndo.bind(this));
+    this.redoButton = $('#toolbar-redo-button');
+    this.redoButton.on('click', this.onRedo.bind(this));
   },
 
   onCompanyChange: function() {
@@ -36,9 +50,7 @@ const PlacementWorkbenchView = Backbone.View.extend({
     }, this);
     this.studentBus.set('score', score);
 
-    // Trigger a global "student-move" event for anyone
-    // who's listening (the ApplicationView)
-    this.trigger('student-move')
+    this.toggleButtons();
   },
 
   addCompany: function(company) {
@@ -48,6 +60,22 @@ const PlacementWorkbenchView = Backbone.View.extend({
     });
     this.companyViews.push(companyView);
     this.listenTo(company, 'change', this.onCompanyChange);
+  },
+
+  toggleButtons: function() {
+    // Undo button
+    if (this.canUndo()) {
+      this.undoButton.removeClass('disabled');
+    } else {
+      this.undoButton.addClass('disabled');
+    }
+
+    // Redo button
+    if (this.canRedo()) {
+      this.redoButton.removeClass('disabled');
+    } else {
+      this.redoButton.addClass('disabled');
+    }
   },
 
   render: function() {
@@ -61,13 +89,33 @@ const PlacementWorkbenchView = Backbone.View.extend({
     return this;
   },
 
-  save: function() {
+  onKeypress: function(event) {
+    var code = event.keyCode || event.which;
+    var command = event.ctrlKey || event.metaKey;
+    if (command && code == 83) {
+      // cmd+s -> save
+      this.onSave();
+      event.preventDefault();
+
+    } else if (command && event.shiftKey && code == 90) {
+      // cmd+shift+u -> redo
+      this.onRedo()
+      event.preventDefault();
+
+    } else if (command && code == 90) {
+      // cmd+u -> undo
+      this.onUndo();
+      event.preventDefault();
+    }
+  },
+
+  onSave: function() {
     console.debug("Saving placement");
     result = this.model.save(null, { fromSave: true });
     console.log(result);
   },
 
-  undo: function() {
+  onUndo: function() {
     console.debug("Undoing action");
 
     // Undo twice: once for selecting the student, and once for the move
@@ -77,7 +125,7 @@ const PlacementWorkbenchView = Backbone.View.extend({
     this.undoManager.undo(true);
   },
 
-  redo: function() {
+  onRedo: function() {
     console.debug("Redoing action");
 
     // As above, need to fire twice
