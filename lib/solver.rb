@@ -1,3 +1,8 @@
+# Solve a placement, to give a starting point for
+# instructors to work from
+# Currently implements the Hungarian Algorithm,
+# see references at the bottom of this file
+
 require 'matrix'
 
 # For some reason Ruby matricies aren't mutable
@@ -6,6 +11,9 @@ require 'matrix'
 class Matrix
   public :"[]=", :set_element, :set_component
 end
+
+# Safety checks for myself
+class ProgrammingError < StandardError; end
 
 class Solver
   # For test introspection
@@ -46,7 +54,25 @@ class Solver
   end
 
   def solve
+    # Find the maximum matching, that is, a set of assignments
+    # using the current reduced matrix. The slots in the array
+    # represent companies (columns), and the values represent
+    # students (rows). -1 means the company has no student assigned
+    assignments = maximum_matching
 
+    # Safety: outside of -1, there should be no duplicate assignments
+    real_assignments = assignments.select { |a| a >= 0 }
+    if real_assignments.length != real_assignments.uniq.length
+      raise ProgrammingError("maximum_matching returned a duplicate value in the assignment array: #{assignments}")
+    end
+
+    # If every company has a student assigned, we're done
+    return assignments unless assignments.include? -1
+
+    # OK, we're not done yet. Need to reduce the matrix,
+    # then go again.
+    # To reduce the matrix, we first convert our maximum matching
+    # into a minimum vertex cover using Koning's graph theorem
   end
 
 private
@@ -107,6 +133,66 @@ private
       end
     end
   end
+
+  def maximum_matching
+    # A matching is a set of edges (pairings) without any common
+    # vertices (students or companies). A maximum matching is a
+    # matching that contains the largest possible number of vertices.
+    #
+    # In this context, we're finding the maximum matching for our
+    # matrix as it has been reduced so far, that is, including only
+    # pairing where the current value is 0.
+    #
+    # To do so, we convert the matrix to a flow graph and use
+    # a variant on the Ford-Fulkerson algorithm to find the
+    # maximum matching.
+    #
+    # See http://www.geeksforgeeks.org/maximum-bipartite-matching/
+
+    # Recursive subroutine based on DFS, that finds an assignment
+    # for the student in row r if possible
+    def bpm(flow_graph, r, seen, assignments)
+      # try each company, one by one
+      flow_graph.column_count.times do |c|
+        # If this student-company pairing is a candidate, and
+        # we haven't yet examined this company
+        if flow_graph[r,c] and not seen(c)
+          # Mark this company as seen
+          seen(c) = true
+
+          # If company c has no assigned student, or if
+          # the currently assigned student can be switched
+          # to a different job, we assign the student to this
+          # job and call it good
+          if assignments[c] < 0 or bpm(flow_graph, assignments[c], seen, assignments)
+            assignments[c] = r
+            return true
+          end
+        end
+      end
+      return false
+    end
+
+    # Build a flow graph from our current cost graph
+    flow_graph = Matrix.build(@matrix.row_count) do |row, col|
+      @matrix[row, col] == 0
+    end
+
+    # Array to keep track of which student is assigned to which company
+    # The value of assignments[c] is the student number s
+    # assigned to company c, or -1 if no one is assigned
+    assignments = [-1] * @flow_graph.column_count
+
+    flow_graph.row_count.times do |r|
+      # Array to keep track of which companies
+      # have been seen by this student
+      seen = [false] * @flow_graph.column_count
+
+      bpm(flow_graph, r, seen, assignments)
+    end
+
+    return assignments
+  end
 end
 
 
@@ -120,3 +206,6 @@ end
 # Ruby matrix math:
 #   http://rubylearning.com/blog/2013/04/04/ruby-matrix-the-forgotten-library/
 #   https://ruby-doc.org/stdlib-2.3.0/libdoc/matrix/rdoc/Matrix.html
+#
+# Finding a maximum matching:
+#   http://www.geeksforgeeks.org/maximum-bipartite-matching/
