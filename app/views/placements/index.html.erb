@@ -30,20 +30,22 @@
 <!-- Underscore templates are set to use #
      instead of %, to not conflict with ERB -->
 <script type="text/template" id="placement-card-template">
-  <a href="<#- url #>">
-    <h3>
-      Placement <#- name ? name : id #>
-    </h3>
-    <p>
-      Classroom: <#- classroom_name #>
-    </p>
-    <p>
-      <#- pairing_count #> of <#- student_count #> students paired
-    </p>
-    <p>
-      Last modified <#- updated_at #>
-    </p>
-  </a>
+  <div class="placement-container">
+    <a href="<#- url #>">
+      <h3>
+        Placement <#- name ? name : id #>
+      </h3>
+      <p>
+        Classroom: <#- classroom_name #>
+      </p>
+      <p>
+        <#- pairing_count #> of <#- student_count #> students paired
+      </p>
+      <p>
+        Last modified <#- updated_at #>
+      </p>
+    </a>
+  </div>
 </script>
 
 
