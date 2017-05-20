@@ -5,3 +5,6 @@ jets:
 
 sharks:
   name: sharks
+
+solver_test:
+  name: solver_test

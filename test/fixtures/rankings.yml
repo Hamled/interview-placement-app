@@ -65,3 +65,51 @@ anita_stark:
   company: stark
   student_preference: 4
   interview_result: 4
+
+st_rank_1_2:
+  student: st_stu_one
+  company: st_co_two
+  student_preference: 5
+  interview_result: 5
+
+st_rank_1_3:
+  student: st_stu_one
+  company: st_co_three
+  student_preference: 4
+  interview_result: 3
+
+st_rank_2_2:
+  student: st_stu_two
+  company: st_co_two
+  student_preference: 2
+  interview_result: 4
+
+st_rank_2_3:
+  student: st_stu_two
+  company: st_co_three
+  student_preference: 2
+  interview_result: 2
+
+st_rank_3_1:
+  student: st_stu_three
+  company: st_co_one
+  student_preference: 3
+  interview_result: 3
+
+st_rank_3_3:
+  student: st_stu_three
+  company: st_co_three
+  student_preference: 5
+  interview_result: 4
+
+st_rank_4_1:
+  student: st_stu_four
+  company: st_co_one
+  student_preference: 2
+  interview_result: 1
+
+st_rank_4_3:
+  student: st_stu_four
+  company: st_co_three
+  student_preference: 4
+  interview_result: 3

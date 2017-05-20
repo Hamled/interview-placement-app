@@ -19,3 +19,19 @@ anita:
 no_company:
   name: Mary Jackson
   classroom: jets
+
+st_stu_one:
+  name: st_stu_one
+  classroom: solver_test
+
+st_stu_two:
+  name: st_stu_two
+  classroom: solver_test
+
+st_stu_three:
+  name: st_stu_three
+  classroom: solver_test
+
+st_stu_four:
+  name: st_stu_four
+  classroom: solver_test
