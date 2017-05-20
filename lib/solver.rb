@@ -1,4 +1,12 @@
 require 'matrix'
+
+# For some reason Ruby matricies aren't mutable
+# But apparently there's an easy way to make them so
+# *sigh* sometimes I really do miss Python
+class Matrix
+  public :"[]=", :set_element, :set_component
+end
+
 class Solver
   # For test introspection
   attr_reader :matrix, :students, :companies
