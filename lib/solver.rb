@@ -41,15 +41,18 @@ class Solver
     @matrix = Matrix.build(@students.length, @companies.length) do |row, col|
       initial_cost(row, col)
     end
+
+    initial_reduction
+  end
+
+  def solve
+
   end
 
 private
   # What is the initial cost for a student/company pair?
   # Requires @rankings, @students and @companies to have been initialized
   def initial_cost(row, col)
-
-
-
     # Retrieve the ranking for this student-company pair
     ranking = @rankings.find_by(student: @students[row], company: @companies[col])
 
@@ -71,6 +74,38 @@ private
     # with 5 the worst and 1 the best) then multiply.
     # TODO DPR: might make sense to adopt this schema gloabally
     return (6 - ranking.student_preference) * (6 - ranking.interview_result)
+  end
+
+  def initial_reduction
+    # For each row, subtract the smallest cost from each element
+    # Then repeat for columns
+
+    # r and c are row and column indicies
+    # row and column are actual vectors
+
+    # Reduce rows
+    puts ">>> rows"
+    @matrix.row_count.times do |r|
+      min = @matrix.row(r).min
+      puts "reducing row #{r} by #{min}"
+      if min > 0
+        @matrix.column_count.times do |c|
+          @matrix[r,c] -= min
+        end
+      end
+    end
+
+    # Reduce columns
+    puts ">>> cols"
+    @matrix.column_count.times do |c|
+      min = @matrix.column(c).min
+      puts "reducing col #{c} by #{min}"
+      if min > 0
+        @matrix.row_count.times do |r|
+          @matrix[r,c] -= min
+        end
+      end
+    end
   end
 end
 

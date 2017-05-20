@@ -29,14 +29,24 @@ describe Solver do
         if rank.nil?
           value.must_equal Float::INFINITY
         else
-          value.must_be :>=, 1
-          value.must_be :<=, 25
+          value.must_be :>=, 0
+          value.must_be :<=, 24
         end
       end
 
-      # puts
-      # puts s.matrix
-      # puts
+      puts
+      puts s.matrix
+      puts
+    end
+
+    it "applies the initial reduction" do
+      s = Solver.new(classroom.students, classroom.companies, classroom.rankings)
+      s.matrix.row_count.times do |r|
+        s.matrix.row(r).min.must_equal 0
+      end
+      s.matrix.column_count.times do |c|
+        s.matrix.column(c).min.must_equal 0
+      end
     end
   end
 end
