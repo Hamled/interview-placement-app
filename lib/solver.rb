@@ -54,25 +54,59 @@ class Solver
   end
 
   def solve
-    # Find the maximum matching, that is, a set of assignments
-    # using the current reduced matrix. The slots in the array
-    # represent companies (columns), and the values represent
-    # students (rows). -1 means the company has no student assigned
-    assignments = maximum_matching
+    # Iterate until we've found a complete assignment. Since we add at least one
+    # zero to the reduced matrix every iteration, this is guaranteed to happen
+    # in O(V = S+C) iterations.
+    while (true)
+      # First build a flow graph for the current reduced matrix
+      flow_graph = build_flow_graph
 
-    # Safety: outside of -1, there should be no duplicate assignments
-    real_assignments = assignments.select { |a| a >= 0 }
-    if real_assignments.length != real_assignments.uniq.length
-      raise ProgrammingError("maximum_matching returned a duplicate value in the assignment array: #{assignments}")
+      # Find the maximum matching, that is, a set of assignments
+      # using the current reduced matrix. The slots in the array
+      # represent companies (columns), and the values represent
+      # students (rows). -1 means the company has no student assigned
+      assignments = maximum_matching(flow_graph)
+
+      # Safety: outside of -1, there should be no duplicate assignments
+      real_assignments = assignments.select { |a| a >= 0 }
+      if real_assignments.length != real_assignments.uniq.length
+        raise ProgrammingError("maximum_matching returned a duplicate value in the assignment array: #{assignments}")
+      end
+
+      # If every company has a student assigned, we're done
+      return assignments unless assignments.include? -1
+
+      # If we've gotten here that means we're not done yet.
+      # Need to reduce the matrix, then go again.
+      # To reduce the matrix, we first convert our maximum matching
+      # into a minimum vertex cover using Koning's graph theorem
+      mvc_students, mvc_companies = minimum_vertex_cover(flow_graph, assignments)
+
+      # We also need the minimum non-zero value in the matrix
+      min_value = @matrix.min
+
+      # To reduce the matrix, we use the following method:
+      # for each element (r,c) in the matrix:
+      #   if r not in mvc_students and c not in mvc_companies (i.e. the cell in the matrix is not covered by any lines)
+      #     subtract min_value from the element
+      #   else if both r in mvc_students and c in mvc_companies (i.e. cell is covered by two lines)
+      #     add min_value to the element
+      # I haven't yet read or come up with a convincing explanation of why this works, but as
+      # far as I can tell it's something to do with lowering our standards for
+      # uncovered nodes while not letting covered nodes stagnate. Worth doing
+      # some more serious thinking (especially if it ends up not working).
+      @matrix.each do |value, r, c|
+        if !mvc_students[r] and !mvc_companies[c]
+          # Not covered -> lower our standards
+          @matrix[r, c] = value - min_value
+
+        elsif mvc_students[r] and mvc_companies[c]
+          # Covered twice -> raise our stanards
+          @matrix[r, c] = value + min_value
+
+        end
+      end
     end
-
-    # If every company has a student assigned, we're done
-    return assignments unless assignments.include? -1
-
-    # OK, we're not done yet. Need to reduce the matrix,
-    # then go again.
-    # To reduce the matrix, we first convert our maximum matching
-    # into a minimum vertex cover using Koning's graph theorem
   end
 
 private
@@ -143,6 +177,14 @@ private
   # Maximum matching
   #
 
+  # The binary flow graph is used to compute both the
+  # maximum matching and the minimum vertex cover.
+  def build_flow_graph
+    return Matrix.build(@matrix.row_count) do |row, col|
+      @matrix[row, col] == 0
+    end
+  end
+
   # Recursive subroutine based on DFS, that finds an assignment
   # for the student in row r if possible
   def find_match(flow_graph, r, seen, assignments)
@@ -180,12 +222,7 @@ private
   # maximum matching.
   #
   # See http://www.geeksforgeeks.org/maximum-bipartite-matching/
-  def maximum_matching
-    # Build a flow graph from our current cost graph
-    flow_graph = Matrix.build(@matrix.row_count) do |row, col|
-      @matrix[row, col] == 0
-    end
-
+  def maximum_matching(flow_graph)
     # Array to keep track of which student is assigned to which company
     # The value of assignments[c] is the student number s
     # assigned to company c, or -1 if no one is assigned
@@ -199,7 +236,7 @@ private
       find_match(flow_graph, r, seen, assignments)
     end
 
-    return assignments
+    return flow_graph, assignments
   end
 
   #
@@ -209,9 +246,9 @@ private
   # Implementation of the algorithm described by Konig's Theorem
   # https://en.wikipedia.org/wiki/K%C5%91nig%27s_theorem_(graph_theory)#Proof
   def minimum_vertex_cover(flow_graph, assignments)
-    # Konig's theorm indicates that, given:
+    # Konig's theorm tells us that, given:
     #   a bipartate graph G, with vertices partitioned into students S and companies C,
-    #     and edges E (all of which currently have cost 0, or are marked true in the flow graph)
+    #     and edges E (all of which currently have cost 0, a.k.a. are marked true in the flow graph), and
     #   a maximum matching M (a subset of the edges in E),
     # a minim vertex cover K can be constructed via the following technique:
     #
@@ -231,7 +268,109 @@ private
     # K = ( S - S* ) U C*
     #
     # How do we find vertices in S* and C*? BFS or DFS, of course!
+    #
+    # In the following code, S' will be called unmatched_students, and
+    # S* and C* will be called reachable_[students|companies], respectively
+    #
+    # Note: the provided flow graph is not (quite) bipartate - it may contain
+    # students or companies that are not connected to anything else. We'll have to
+    # explicitly check for and filter these as we compute our MVC
 
+    # TODO DPR: how do results change if we swap S and C in the above?
+
+    # First compute S', the set of students not assigned to a company by M,
+    # but still with an edge in the flow graph
+    unmatched_students = []
+    flow_graph.row_count.times do |r|
+      # If the student doesn't have an edge in the flow graph, or if
+      # one of the edges for this student is in M, skip this student
+      found_edge = false
+      matched = false
+      flow_graph.column_count.times do |c|
+        if flow_graph[r, c]
+          if assignments[c] == r
+            matched = true
+            break
+          end
+          found_edge = true
+        end
+      end
+
+      unless matched or not found_edge
+        unmatched_students << r
+      end
+    end
+
+    # Safety: there should be no duplicates in unmatched_students
+    if unmatched_students.uniq.length != unmatched_students.length
+      raise ProgrammingError.new("in Konig, unmatched students contained a duplicate: #{unmatched_students}")
+    end
+
+    # Next, compute S* and C*, the sets of students and companies reachable
+    # via an alternating path from S'. To do so, we use a DFS.
+    visited_students = [false] * flow_graph.row_count
+    visited_companies = [false] * flow_graph.column_count
+
+    # Since DFS is (traditionally) recursive, we'll define a couple helper
+    # methods: visit_company and visit_student
+    # And yes, mutually recursive functions do work in Ruby
+    # XXX DPR: there must be a better way to iterate across a range than
+    #   flow_graph.row_count.times.[enumerable method]
+    # Note that since each search starts at a student not connected by M,
+    # odd legs in the path (student -> company) will always *not* be in M,
+    # while even legs (company -> student) always *will* be in M.
+    def visit_company(c)
+      # Check the visited list
+      return if visited_companies[c]
+      # Add to visited list
+      visited_companies[c] = true
+
+      # Iterate across rows
+      flow_graph.row_count.times.select { |r|
+        # Only investigate rows that are both in the graph and not yet visited,
+        # and which *are* included in M for this column
+        flow_graph[r, c] and not visited_students[r] and assignment[c] == r
+      }.each do |r|
+        visit_student(r)
+      end
+    end
+
+    # Has same form as visit_company, but with student and company swapped.
+    # Refer to the above for comments. The only difference is in whether we're
+    # looking for a vertex that is in M or not.
+    def visit_student(r)
+      return if visited_students[r]
+      visited_students[r] = true
+
+      flow_graph.column_count.times.select { |c|
+        # Only investigate columns that are both in the graph and not yet visited,
+        # and which are *not* included in M for this row
+        flow_graph[r, c] and not visited_companies[c] and assignment[c] != r
+      }.each do |c|
+        visit_company(c)
+      end
+    end
+
+    # Now that we've got our bipartate DFS methods set up, actually run the search!
+    unmatched_students.each do |r|
+      visit_student(r)
+    end
+
+    # Now that we've got S* and C*, we can compute our MVC. Recall:
+    # K = ( S - S* ) U C*
+    # Note that a student is in S* if it was visited in the previous DFS, and
+    # similarly for companies in C*
+    # XXX DPR: each of these loops is n^2, we could probably do some
+    # preproscessing for lists of matched students and companies to eliminate that
+    mvc_students = row_count.times.map do |r|
+      not visited_students[r] and flow_graph.row(r).include? true
+    end
+
+    mvc_companies = flow_graph.column_count.times.map do |c|
+      visited_companies[c] and flow_graph.column(c).include? true
+    end
+
+    return mvc_students, mvc_companies
   end
 end
 
