@@ -58,14 +58,24 @@ class Solver
     # zero to the reduced matrix every iteration, this is guaranteed to happen
     # in O(V = S+C) iterations.
     while (true)
+      puts "Current matrix reduction:"
+      puts @matrix
+
       # First build a flow graph for the current reduced matrix
       flow_graph = build_flow_graph
+
+      puts "Built flow graph:"
+      puts flow_graph
 
       # Find the maximum matching, that is, a set of assignments
       # using the current reduced matrix. The slots in the array
       # represent companies (columns), and the values represent
       # students (rows). -1 means the company has no student assigned
       assignments = maximum_matching(flow_graph)
+
+      puts "Flow graph resulted in assignments:"
+      print assignments
+      puts
 
       # Safety: outside of -1, there should be no duplicate assignments
       real_assignments = assignments.select { |a| a >= 0 }
@@ -82,8 +92,15 @@ class Solver
       # into a minimum vertex cover using Koning's graph theorem
       mvc_students, mvc_companies = minimum_vertex_cover(flow_graph, assignments)
 
+      puts "MVC (students, companies) (expect all students upon convergence):"
+      print mvc_students
+      puts
+      print mvc_companies
+      puts
+
       # We also need the minimum non-zero value in the matrix
-      min_value = @matrix.min
+      min_value = @matrix.select { |v| v > 0 }.min
+      puts "min_value for reduction is #{min_value}"
 
       # To reduce the matrix, we use the following method:
       # for each element (r,c) in the matrix:
@@ -95,7 +112,7 @@ class Solver
       # far as I can tell it's something to do with lowering our standards for
       # uncovered nodes while not letting covered nodes stagnate. Worth doing
       # some more serious thinking (especially if it ends up not working).
-      @matrix.each do |value, r, c|
+      @matrix.each_with_index do |value, r, c|
         if !mvc_students[r] and !mvc_companies[c]
           # Not covered -> lower our standards
           @matrix[r, c] = value - min_value
@@ -192,9 +209,9 @@ private
     flow_graph.column_count.times do |c|
       # If this student-company pairing is a candidate, and
       # we haven't yet examined this company
-      if flow_graph[r,c] and not seen(c)
+      if flow_graph[r,c] and not seen[c]
         # Mark this company as seen
-        seen(c) = true
+        seen[c] = true
 
         # If company c has no assigned student, or if
         # the currently assigned student can be switched
@@ -226,17 +243,17 @@ private
     # Array to keep track of which student is assigned to which company
     # The value of assignments[c] is the student number s
     # assigned to company c, or -1 if no one is assigned
-    assignments = [-1] * @flow_graph.column_count
+    assignments = [-1] * flow_graph.column_count
 
     flow_graph.row_count.times do |r|
       # Array to keep track of which companies
       # have been seen while attempting to place this student
-      seen = [false] * @flow_graph.column_count
+      seen = [false] * flow_graph.column_count
 
       find_match(flow_graph, r, seen, assignments)
     end
 
-    return flow_graph, assignments
+    return assignments
   end
 
   #
@@ -319,7 +336,7 @@ private
     # Note that since each search starts at a student not connected by M,
     # odd legs in the path (student -> company) will always *not* be in M,
     # while even legs (company -> student) always *will* be in M.
-    def visit_company(c)
+    def visit_company(c, flow_graph, visited_companies, visited_students, assignments)
       # Check the visited list
       return if visited_companies[c]
       # Add to visited list
@@ -329,31 +346,31 @@ private
       flow_graph.row_count.times.select { |r|
         # Only investigate rows that are both in the graph and not yet visited,
         # and which *are* included in M for this column
-        flow_graph[r, c] and not visited_students[r] and assignment[c] == r
+        flow_graph[r, c] and not visited_students[r] and assignments[c] == r
       }.each do |r|
-        visit_student(r)
+        visit_student(r, flow_graph, visited_companies, visited_students, assignments)
       end
     end
 
     # Has same form as visit_company, but with student and company swapped.
     # Refer to the above for comments. The only difference is in whether we're
     # looking for a vertex that is in M or not.
-    def visit_student(r)
+    def visit_student(r, flow_graph, visited_companies, visited_students, assignments)
       return if visited_students[r]
       visited_students[r] = true
 
       flow_graph.column_count.times.select { |c|
         # Only investigate columns that are both in the graph and not yet visited,
         # and which are *not* included in M for this row
-        flow_graph[r, c] and not visited_companies[c] and assignment[c] != r
+        flow_graph[r, c] and not visited_companies[c] and assignments[c] != r
       }.each do |c|
-        visit_company(c)
+        visit_company(c, flow_graph, visited_companies, visited_students, assignments)
       end
     end
 
     # Now that we've got our bipartate DFS methods set up, actually run the search!
     unmatched_students.each do |r|
-      visit_student(r)
+      visit_student(r, flow_graph, visited_companies, visited_students, assignments)
     end
 
     # Now that we've got S* and C*, we can compute our MVC. Recall:
@@ -362,7 +379,7 @@ private
     # similarly for companies in C*
     # XXX DPR: each of these loops is n^2, we could probably do some
     # preproscessing for lists of matched students and companies to eliminate that
-    mvc_students = row_count.times.map do |r|
+    mvc_students = flow_graph.row_count.times.map do |r|
       not visited_students[r] and flow_graph.row(r).include? true
     end
 
