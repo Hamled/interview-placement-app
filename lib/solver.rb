@@ -20,7 +20,7 @@ class SolutionError < StandardError; end
 
 class Solver
   # For test introspection
-  attr_reader :matrix, :students, :companies
+  attr_reader :matrix, :students, :companies, :iterations
 
   # Constraints:
   #   Number of students must equal number of company slots
@@ -66,15 +66,18 @@ class Solver
     # is at most O(V^5). Pretty gross, and the internet claims we can get the
     # whole thing down to O(V^3), but since our V is at most 48 I don't think
     # it's an issue. Basically until someone complains about performance IDGAF
+    @iterations = 0
     while (true)
-      puts "Current matrix reduction:"
-      puts @matrix
+      @iterations += 1
+
+      # puts "Current matrix reduction:"
+      # puts @matrix
 
       # First build a flow graph for the current reduced matrix
       flow_graph = build_flow_graph
 
-      puts "Built flow graph:"
-      puts flow_graph
+      # puts "Built flow graph:"
+      # puts flow_graph
 
       # Find the maximum matching, that is, a set of assignments
       # using the current reduced matrix. The slots in the array
@@ -82,9 +85,9 @@ class Solver
       # students (rows). -1 means the company has no student assigned
       assignments = maximum_matching(flow_graph)
 
-      puts "Flow graph resulted in assignments:"
-      print assignments
-      puts
+      # puts "Flow graph resulted in assignments:"
+      # print assignments
+      # puts
 
       # Safety: outside of -1, there should be no duplicate assignments
       real_assignments = assignments.select { |a| a >= 0 }
@@ -101,15 +104,15 @@ class Solver
       # into a minimum vertex cover using Koning's graph theorem
       mvc_students, mvc_companies = minimum_vertex_cover(flow_graph, assignments)
 
-      puts "MVC (students, companies):"
-      print mvc_students
-      puts
-      print mvc_companies
-      puts
+      # puts "MVC (students, companies):"
+      # print mvc_students
+      # puts
+      # print mvc_companies
+      # puts
 
       # We also need the minimum non-zero value in the matrix
       min_value = @matrix.select { |v| v > 0 }.min
-      puts "min_value for reduction is #{min_value}"
+      # puts "min_value for reduction is #{min_value}"
 
       # XXX DPR: Not sure if we'll always hit this
       # or if there's some thrashing behavior we might encounter
@@ -184,10 +187,8 @@ private
     # row and column are actual vectors
 
     # Reduce rows
-    puts ">>> rows"
     @matrix.row_count.times do |r|
       min = @matrix.row(r).min
-      puts "reducing row #{r} by #{min}"
       if min > 0
         @matrix.column_count.times do |c|
           @matrix[r,c] -= min
@@ -196,10 +197,8 @@ private
     end
 
     # Reduce columns
-    puts ">>> cols"
     @matrix.column_count.times do |c|
       min = @matrix.column(c).min
-      puts "reducing col #{c} by #{min}"
       if min > 0
         @matrix.row_count.times do |r|
           @matrix[r,c] -= min
