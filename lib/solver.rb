@@ -76,6 +76,11 @@ class Solver
   end
 
 private
+
+  #
+  # Initialization
+  #
+
   # What is the initial cost for a student/company pair?
   # Requires @rankings, @students and @companies to have been initialized
   def initial_cost(row, col)
@@ -134,45 +139,48 @@ private
     end
   end
 
-  def maximum_matching
-    # A matching is a set of edges (pairings) without any common
-    # vertices (students or companies). A maximum matching is a
-    # matching that contains the largest possible number of vertices.
-    #
-    # In this context, we're finding the maximum matching for our
-    # matrix as it has been reduced so far, that is, including only
-    # pairing where the current value is 0.
-    #
-    # To do so, we convert the matrix to a flow graph and use
-    # a variant on the Ford-Fulkerson algorithm to find the
-    # maximum matching.
-    #
-    # See http://www.geeksforgeeks.org/maximum-bipartite-matching/
+  #
+  # Maximum matching
+  #
 
-    # Recursive subroutine based on DFS, that finds an assignment
-    # for the student in row r if possible
-    def bpm(flow_graph, r, seen, assignments)
-      # try each company, one by one
-      flow_graph.column_count.times do |c|
-        # If this student-company pairing is a candidate, and
-        # we haven't yet examined this company
-        if flow_graph[r,c] and not seen(c)
-          # Mark this company as seen
-          seen(c) = true
+  # Recursive subroutine based on DFS, that finds an assignment
+  # for the student in row r if possible
+  def find_match(flow_graph, r, seen, assignments)
+    # try each company, one by one
+    flow_graph.column_count.times do |c|
+      # If this student-company pairing is a candidate, and
+      # we haven't yet examined this company
+      if flow_graph[r,c] and not seen(c)
+        # Mark this company as seen
+        seen(c) = true
 
-          # If company c has no assigned student, or if
-          # the currently assigned student can be switched
-          # to a different job, we assign the student to this
-          # job and call it good
-          if assignments[c] < 0 or bpm(flow_graph, assignments[c], seen, assignments)
-            assignments[c] = r
-            return true
-          end
+        # If company c has no assigned student, or if
+        # the currently assigned student can be switched
+        # to a different company, we assign the student
+        # to this company and call it good
+        if assignments[c] < 0 or find_match(flow_graph, assignments[c], seen, assignments)
+          assignments[c] = r
+          return true
         end
       end
-      return false
     end
+    return false
+  end
 
+  # A matching is a set of edges (pairings) without any common
+  # vertices (students or companies). A maximum matching is a
+  # matching that contains the largest possible number of vertices.
+  #
+  # In this context, we're finding the maximum matching for our
+  # matrix as it has been reduced so far, that is, including only
+  # pairing where the current value is 0.
+  #
+  # To do so, we convert the matrix to a flow graph and use
+  # a variant on the Ford-Fulkerson algorithm to find the
+  # maximum matching.
+  #
+  # See http://www.geeksforgeeks.org/maximum-bipartite-matching/
+  def maximum_matching
     # Build a flow graph from our current cost graph
     flow_graph = Matrix.build(@matrix.row_count) do |row, col|
       @matrix[row, col] == 0
@@ -185,13 +193,45 @@ private
 
     flow_graph.row_count.times do |r|
       # Array to keep track of which companies
-      # have been seen by this student
+      # have been seen while attempting to place this student
       seen = [false] * @flow_graph.column_count
 
-      bpm(flow_graph, r, seen, assignments)
+      find_match(flow_graph, r, seen, assignments)
     end
 
     return assignments
+  end
+
+  #
+  # Minimum vertex cover
+  #
+
+  # Implementation of the algorithm described by Konig's Theorem
+  # https://en.wikipedia.org/wiki/K%C5%91nig%27s_theorem_(graph_theory)#Proof
+  def minimum_vertex_cover(flow_graph, assignments)
+    # Konig's theorm indicates that, given:
+    #   a bipartate graph G, with vertices partitioned into students S and companies C,
+    #     and edges E (all of which currently have cost 0, or are marked true in the flow graph)
+    #   a maximum matching M (a subset of the edges in E),
+    # a minim vertex cover K can be constructed via the following technique:
+    #
+    # Let S' be the (possible empty) set of students in S not connected by M
+    # Define an alterating path as a path that alternates between
+    #   edges in M and those not in M (doesn't matter which you start on)
+    # Let S* be the set of students in S that are either in S', or can
+    #   be reached by following an alternating path from S' (a superset of S')
+    # Let C* be the set of companies in C that can be reached by such a path from S'
+    # Then the MVC K can be defined as the union of students not in S* and companies in C*
+    #
+    # More formally:
+    # S' = { s in S not connected by M }
+    # S* = S' U { s in S reachable by an alternating path from S' }
+    # C* = { c in C reachable by an alternating path from S' }
+    # then
+    # K = ( S - S* ) U C*
+    #
+    # How do we find vertices in S* and C*? BFS or DFS, of course!
+
   end
 end
 
