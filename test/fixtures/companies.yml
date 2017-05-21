@@ -21,16 +21,16 @@ no_students:
   classroom: jets
 
 st_co_one:
-  name: ST_co_one
+  name: st_co_one
   slots: 1
   classroom: solver_test
 
 st_co_two:
-  name: ST_co_two
+  name: st_co_two
   slots: 1
   classroom: solver_test
 
 st_co_three:
-  name: ST_co_three
+  name: st_co_three
   slots: 2
   classroom: solver_test

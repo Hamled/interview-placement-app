@@ -15,6 +15,9 @@ end
 # Safety checks for myself
 class ProgrammingError < StandardError; end
 
+# Raised when the solution does not converge
+class SolutionError < StandardError; end
+
 class Solver
   # For test introspection
   attr_reader :matrix, :students, :companies
@@ -25,6 +28,8 @@ class Solver
   #
   # Invariants:
   #   Students are rows and companies are columns
+  #
+  # Initialization and the initial reduction are both O(V^2).
   def initialize(students, companies, rankings, initial_pairings=[])
     unless initial_pairings.empty?
       raise ArgumentError.new("Cannot yet handle initial pairings")
@@ -56,7 +61,11 @@ class Solver
   def solve
     # Iterate until we've found a complete assignment. Since we add at least one
     # zero to the reduced matrix every iteration, this is guaranteed to happen
-    # in O(V = S+C) iterations.
+    # in O(E) < O(V^2) iterations.
+    # Finding the MM and MVC are both currently O(V^3), so our total runtime
+    # is at most O(V^5). Pretty gross, and the internet claims we can get the
+    # whole thing down to O(V^3), but since our V is at most 48 I don't think
+    # it's an issue. Basically until someone complains about performance IDGAF
     while (true)
       puts "Current matrix reduction:"
       puts @matrix
@@ -92,7 +101,7 @@ class Solver
       # into a minimum vertex cover using Koning's graph theorem
       mvc_students, mvc_companies = minimum_vertex_cover(flow_graph, assignments)
 
-      puts "MVC (students, companies) (expect all students upon convergence):"
+      puts "MVC (students, companies):"
       print mvc_students
       puts
       print mvc_companies
@@ -101,6 +110,12 @@ class Solver
       # We also need the minimum non-zero value in the matrix
       min_value = @matrix.select { |v| v > 0 }.min
       puts "min_value for reduction is #{min_value}"
+
+      # XXX DPR: Not sure if we'll always hit this
+      # or if there's some thrashing behavior we might encounter
+      if min_value == Float::INFINITY
+        raise SolutionError.new("Cannot further reduce the placement matrix. Either there's a programming error or this classroom has no solution!")
+      end
 
       # To reduce the matrix, we use the following method:
       # for each element (r,c) in the matrix:
@@ -158,6 +173,9 @@ private
     return (6 - ranking.student_preference) * (6 - ranking.interview_result)
   end
 
+  # Optimization: reduce the number of times the algorithm
+  # iterates by seeding our matrix with some initial zeros
+  # Runs in O(V^2)
   def initial_reduction
     # For each row, subtract the smallest cost from each element
     # Then repeat for columns
@@ -238,7 +256,10 @@ private
   # a variant on the Ford-Fulkerson algorithm to find the
   # maximum matching.
   #
-  # See http://www.geeksforgeeks.org/maximum-bipartite-matching/
+  # This method runs in O(V(V*E)) < O(V^3)
+  # The internet claims it's possible to achieve O(V^2) by
+  # using the matching from the previous step, but until
+  # performance is an issue I'm not going to bother
   def maximum_matching(flow_graph)
     # Array to keep track of which student is assigned to which company
     # The value of assignments[c] is the student number s
@@ -261,7 +282,6 @@ private
   #
 
   # Implementation of the algorithm described by Konig's Theorem
-  # https://en.wikipedia.org/wiki/K%C5%91nig%27s_theorem_(graph_theory)#Proof
   def minimum_vertex_cover(flow_graph, assignments)
     # Konig's theorm tells us that, given:
     #   a bipartate graph G, with vertices partitioned into students S and companies C,
@@ -292,6 +312,12 @@ private
     # Note: the provided flow graph is not (quite) bipartate - it may contain
     # students or companies that are not connected to anything else. We'll have to
     # explicitly check for and filter these as we compute our MVC
+    #
+    # Since it's built around a DFS from each unmatched student,
+    # I believe the runtime has an upper bound of O(V(V*E)) < O(V^3).
+    # Because the visited list for the DFS is maintained between
+    # students, it may just be O(V*E) < O(V^2), but I haven't
+    # bothered to actually run the math yet
 
     # TODO DPR: how do results change if we swap S and C in the above?
 
@@ -405,3 +431,7 @@ end
 #
 # Finding a maximum matching:
 #   http://www.geeksforgeeks.org/maximum-bipartite-matching/
+#
+# Converting a maximum matching to a minimum vertex cover:
+#   https://en.wikipedia.org/wiki/K%C5%91nig%27s_theorem_(graph_theory)#Proof
+#   http://math.mit.edu/~goemans/18433S09/matching-notes.pdf
