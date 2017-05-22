@@ -23,7 +23,10 @@
         <td><%= classroom.students.count %></td>
         <td><%= classroom.companies.count %></td>
         <td><%= link_to "#{classroom.placements.count}", classroom_placements_path(classroom), class: "button" %></td>
-        <td><%= link_to "Start", classroom_placements_path(classroom), method: :post, class: "button" %></td>
+        <td>
+          <%= link_to "Blank", classroom_placements_path(classroom, run_solver: false), method: :post, class: "button" %>
+          <%= link_to "Filled", classroom_placements_path(classroom, run_solver: true), method: :post, class: "button" %>
+        </td>
         <td><%= classroom.created_at %></td>
         <td><%= classroom.creator.name %></td>
       </tr>

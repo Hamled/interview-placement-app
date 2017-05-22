@@ -12,6 +12,9 @@ class PlacementsController < ApplicationController
   def create
     @placement = Placement.build(classroom_id: params[:classroom_id])
     if @placement.save()
+      if params[:run_solver]
+        @placement.solve
+      end
       redirect_to placement_path(@placement)
     else
       flash[:status] = :failure

@@ -46,4 +46,27 @@ class Placement < ApplicationRecord
     end
     return sum
   end
+
+  def solve
+    puts "About to generate solution for pairing #{self.name} for classroom #{self.classroom.name} with #{self.classroom.students.count} students and #{self.classroom.companies.count} companies"
+
+    start_time = Time.now
+    solver = Solver.new(self.classroom)
+    pairings = solver.solve
+    end_time = Time.now
+
+    self.transaction do
+      # Clear out any existing pairings
+      # TODO DPR: handle solving the remainder of a pairing
+      self.pairings.destroy_all
+
+      # Add all the generated pairings to this placement
+      pairings.each do |pair|
+        pair.placement = self
+        pair.save!
+      end
+    end
+
+    puts "Generated #{pairings.length} pairings with total score #{self.score} in #{Time.now - start_time} seconds, #{solver.iterations} iterations"
+  end
 end
