@@ -2,7 +2,8 @@ require 'test_helper'
 
 describe Solver do
   let (:classroom) { Classroom.find_by(name: "solver_test") }
-  let (:solver) { Solver.new(classroom.students, classroom.companies, classroom.rankings) }
+  let (:solver) { Solver.new(classroom) }
+
   describe '#initialize' do
     # TODO DPR: currently these are all in fixtures, maybe look into
     # factorygirl?
@@ -48,27 +49,35 @@ describe Solver do
   end
 
   describe "#solve" do
-    it "produces an array" do
-      assignments = solver.solve
+    def check_pairings(pairings, classroom)
+      pairings.length.must_equal classroom.students.length
 
-      # puts
-      # puts "Got assignments back from solver.solve:"
-      # assignments.each_with_index do |r, c|
-      #   puts "Student #{solver.students[r].name} to company #{solver.companies[c].name}"
-      # end
+      # Check for duplicates
+      students = {}
+      companies = Hash.new([])
+      pairings.each do |pair|
+        pair.must_be_kind_of Pairing
+        classroom.students.must_include pair.student
+        classroom.companies.must_include pair.company
+        
+        students.wont_include pair.student.name
+        students[pair.student.name] = pair.company.name
 
-      assignments.length.must_equal solver.companies.length
-
-      # no duplicates allowed
-      assignments.length.must_equal assignments.uniq.length
-
-      # All values must be in range [0, student_count)
-      assignments.each do |r|
-        r.must_be :>=, 0
-        r.must_be :<, classroom.students.count
+        companies[pair.company.name].wont_include pair.student.name
+        companies[pair.company.name] << pair.student.name
+      end
+      companies.each do |name, students|
+        company = classroom.companies.find_by(name: name)
+        students.length.must_equal company.slots
       end
 
-      # That's pretty much all we can say at this point
+      # TODO DPR: figure out a way to check that the set of
+      # pairings is optimal / stable / something
+    end
+
+    it "produces an array" do
+      pairings = solver.solve
+      check_pairings(pairings, classroom)
     end
 
     it "produces an error on an unsolvable classroom" do
@@ -85,7 +94,7 @@ describe Solver do
       Ranking.create!(student: Student.find_by(name: :st_stu_four), company: Company.find_by(name: :st_co_two), student_preference: 5, interview_result: 5)
       Ranking.create!(student: Student.find_by(name: :st_stu_four), company: Company.find_by(name: :st_co_three), student_preference: 5, interview_result: 5)
 
-      solver = Solver.new(classroom.students, classroom.companies, classroom.rankings)
+      solver = Solver.new(classroom)
       proc {
         solver.solve
       }.must_raise SolutionError
@@ -153,21 +162,11 @@ describe Solver do
 
       # We're set up - time to build and run the solver
       start_time = Time.now
-      solver = Solver.new(classroom.students, classroom.companies, classroom.rankings)
-      assignments = solver.solve
+      solver = Solver.new(classroom)
+      pairings = solver.solve
       total_time = Time.now - start_time
 
-      # Verify the results
-      assignments.length.must_equal SCALE
-
-      # no duplicates allowed
-      assignments.length.must_equal assignments.uniq.length
-
-      # All values must be in range [0, SCALE)
-      assignments.each do |r|
-        r.must_be :>=, 0
-        r.must_be :<, SCALE
-      end
+      check_pairings(pairings, classroom)
 
       return total_time, solver.iterations
     end

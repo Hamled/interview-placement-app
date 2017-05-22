@@ -30,17 +30,17 @@ class Solver
   #   Students are rows and companies are columns
   #
   # Initialization and the initial reduction are both O(V^2).
-  def initialize(students, companies, rankings, initial_pairings=[])
+  def initialize(classroom, initial_pairings=[])
     unless initial_pairings.empty?
       raise ArgumentError.new("Cannot yet handle initial pairings")
     end
-    @rankings = rankings
+    @rankings = classroom.rankings
 
     # Build row and column headers
     # (lists of students and company slots)
-    @students = students
+    @students = classroom.students
     @companies = []
-    companies.each do |company|
+    classroom.companies.each do |company|
       # If a company has multiple slots, add that many rows
       company.slots.times do
         @companies << company
@@ -96,7 +96,9 @@ class Solver
       end
 
       # If every company has a student assigned, we're done
-      return assignments unless assignments.include? -1
+      unless assignments.include? -1
+        return build_pairings(assignments)
+      end
 
       # If we've gotten here that means we're not done yet.
       # Need to reduce the matrix, then go again.
@@ -413,6 +415,15 @@ private
     end
 
     return mvc_students, mvc_companies
+  end
+
+  def build_pairings(assignments)
+    # Note: none of these will be valid until attached to a placement
+    pairings = []
+    assignments.each_with_index do |r, c|
+      pairings << Pairing.new(student: @students[r], company: @companies[c])
+    end
+    return pairings
   end
 end
 
